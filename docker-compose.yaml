@@ -1,0 +1,31 @@
+version: '3.2'
+
+x-env: &env
+  MONGO_URI: mongodb://ts-db:27017/
+  MONGO_DB_NAME: timeseries-visualization-test
+  MONGO_COLLECTION_NAME: temperature
+
+services:
+  mongodb:
+    container_name: ts-db
+    image: mongo:6.0.3
+    ports:
+      - 27017:27017
+  generator:
+    container_name: ts-generator
+    build:
+      context: data-generator
+    environment:
+      <<: *env
+    depends_on:
+      - mongodb
+  api:
+    container_name: ts-api
+    build:
+      context: data-api
+    ports:
+      - 8000:8000
+    environment:
+      <<: *env
+    depends_on:
+      - generator
