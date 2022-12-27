@@ -1,0 +1,27 @@
+# Timeseries
+
+Python exercise
+
+![Tests](https://github.com/rcbop/python-timeseries/actions/workflows/ci.yaml/badge.svg)&nbsp;&nbsp;[![codecov](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graph/badge.svg?token=ijcD6RzE8L)](https://codecov.io/gh/rcbop/timeseries-visualization)
+
+## Requirements
+
+- [Pyenv](https://github.com/pyenv/pyenv)
+- [Pyenv virtualenv](https://github.com/pyenv/pyenv-virtualenv)
+- `GNU make`
+
+## Query String Filters
+
+API endpoint with query string filters deep-object like:
+
+![query_string_filters](./docs/query_string_filters.png)
+
+## TODO
+
+check usage of [mongo engine ORM](http://mongoengine.org/) with timeseries collection
+
+### Code Coverage Graph
+
+#### Sunburst graph
+
+[![graph](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graphs/sunburst.svg?token=ijcD6RzE8L)](https://docs.codecov.com/reference/sunburst)

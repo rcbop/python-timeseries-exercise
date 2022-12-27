@@ -1,0 +1,20 @@
+[build-system]
+requires = [
+  "setuptools >= 40.9.0",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+addopts = "--cov=api --cov-report=xml"
+python_files = ["test_*.py", "*_test.py", "tests/*.py"]
+python_functions = ["test"]
+python_classes = ["Test"]
+testpaths = ["tests"]
+filterwarnings = [
+  "ignore:'cgi':DeprecationWarning:httpx"
+]
+
+
+markers = [
+  "unit"
+]

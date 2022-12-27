@@ -1,0 +1,8 @@
+__pycache__
+.coverage
+.pytest_cache
+.python-version
+.venv
+.vscode/launch.json
+*.egg-info
+coverage.xml
