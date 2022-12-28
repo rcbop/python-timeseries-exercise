@@ -15,7 +15,7 @@ jobs:
     outputs:
       projects: ${{ steps.list-projects.outputs.PROJECTS }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: List python projects
         id: list-projects
         run: echo "PROJECTS=$(find . -name "pyproject.toml" -exec dirname {} \; | jq --raw-input --slurp -c 'split("\n") | .[0:-1]')" >> $GITHUB_OUTPUT
@@ -27,7 +27,7 @@ jobs:
       matrix:
         project: ${{ fromJson(needs.list-python-projects.outputs.projects) }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
           python-version: 3.11
