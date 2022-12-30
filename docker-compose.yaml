@@ -29,3 +29,21 @@ services:
       <<: *env
     depends_on:
       - generator
+  angular-dashboard:
+    container_name: angular-dashboard
+    build:
+      context: angular-dashboard
+    ports:
+      - 80:80
+    depends_on:
+      - api
+  plotly-dashboard:
+    container_name: plotly-dashboard
+    build:
+      context: plotly-dashboard
+    ports:
+      - 8050:8050
+    environment:
+      <<: *env
+    depends_on:
+      - generator

@@ -7,7 +7,7 @@
       "script": "start",
       "isBackground": true,
       "options": {
-        "cwd": "${workspaceRoot}/data-dashboard/dashboard/"
+        "cwd": "${workspaceRoot}/angular-dashboard/dashboard/"
       },
       "problemMatcher": {
         "owner": "typescript",
@@ -28,7 +28,7 @@
       "script": "test",
       "isBackground": true,
       "options": {
-        "cwd": "${workspaceRoot}/data-dashboard/dashboard/"
+        "cwd": "${workspaceRoot}/angular-dashboard/dashboard/"
       },
       "problemMatcher": {
         "owner": "typescript",
