@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { TimeseriesApiService } from '../timeseries-api.service';
+import { TemperatureDataPoint } from '../model';
+import { TemperatureService } from '../temperature.service';
 
 declare var require: any;
 let Boost = require('highcharts/modules/boost');
@@ -19,13 +20,20 @@ noData(Highcharts);
 })
 export class TimeseriesGraphComponent implements OnInit {
   Highcharts = Highcharts;
+
+  // TODO implement event emitter to update chart start and end date from the datepicker
+  startDate?: Date = undefined;
+  endDate?: Date = undefined;
+
   chart: any;
+  data: TemperatureDataPoint[] = [];
+
   private options: any = {
     chart: {
       zoomType: 'x'
     },
     title: {
-      text: 'Sample Data',
+      text: 'House Temperature Data',
       align: 'left'
     },
     subtitle: {
@@ -33,7 +41,20 @@ export class TimeseriesGraphComponent implements OnInit {
         'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in',
       align: 'left'
     },
+    tooltip: {
+      formatter: () => {
+        let index = this.chart.hoverPoint.index;
+        let point = this.data[index-1]
+        if (!point) {
+          return 'No point found';
+        }
+        return `Sensor area: <b>${point.sensor_area}</b><br>Temperature: ${point.temperature}<br>Timestamp: ${point.temperature}`;
+      }
+    },
     legend: {
+      enabled: false
+    },
+    credits: {
       enabled: false
     },
     xAxis: {
@@ -57,12 +78,17 @@ export class TimeseriesGraphComponent implements OnInit {
 
   ngOnInit(): void {
     this.chart = Highcharts.chart('container', this.options);
-    this.timeseriesAPIService.getTemperatureData().subscribe((data) => {
-      console.log(data);
-      // convert TemperatureDataPoint to Highcharts DataPoints [x, y]
+    this.updateChart();
+  }
+
+  updateChart() {
+    this.timeseriesAPIService.getParsedDataWithUpdatingInterval(this.startDate, this.endDate).subscribe((data) => {
+      this.data = data;
+
       let convertedChartData = data.map((item) => {
         return [item.timestamp.getTime(), item.temperature];
       });
+
       this.chart.update(
         {
           series: [{
@@ -73,6 +99,5 @@ export class TimeseriesGraphComponent implements OnInit {
     });
   }
 
-  constructor(private timeseriesAPIService: TimeseriesApiService) {
-  }
+  constructor(private timeseriesAPIService: TemperatureService) {}
 }

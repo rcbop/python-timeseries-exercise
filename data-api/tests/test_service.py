@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+import pymongo
 import pytest
 from api.temperature.models import SensorData
 from api.temperature.service import TemperatureService
@@ -9,7 +10,9 @@ from bson import ObjectId
 def prepare_collection_mock(expected_resultset: list[dict]) -> Mock:
     temp_collection_mock = Mock()
     mock_cursor = Mock()
-    mock_cursor.limit = Mock(return_value=expected_resultset)
+    mock_cursor_with_limit = Mock()
+    mock_cursor.limit = Mock(return_value=mock_cursor_with_limit)
+    mock_cursor_with_limit.sort = Mock(return_value=expected_resultset)
     temp_collection_mock.find = Mock(return_value=mock_cursor)
     return temp_collection_mock
 
@@ -83,8 +86,11 @@ def test_temperature_service_get_temperatures(filters: dict,
     """Test the get_temperatures method."""
     mocked_collection = prepare_collection_mock(expected_result_set)
     mocked_mongo_query_builder = prepare_mongo_query_builder_mock(mongo_query)
-    temperature_service = TemperatureService(mocked_collection, mocked_mongo_query_builder)
+    temperature_service = TemperatureService(
+        mocked_collection, mocked_mongo_query_builder)
     got_result_set = temperature_service.get_temperatures(filters)
     mocked_collection.find.assert_called_once_with(mongo_query)
     mocked_collection.find.return_value.limit.assert_called_once_with(limit)
+    mocked_collection.find.return_value.limit.return_value.sort.assert_called_once_with("timestamp",
+        pymongo.DESCENDING)
     assert got_result_set == [SensorData(**doc) for doc in expected_result_set]

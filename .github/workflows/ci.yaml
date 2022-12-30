@@ -9,6 +9,17 @@ on:
   workflow_dispatch:
 
 jobs:
+  list-node-projects:
+    name: list node projects
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.list-projects.outputs.PROJECTS }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: List node projects
+        id: list-projects
+        run: echo "PROJECTS=$(find . -name "package.json" -exec dirname {} \; | grep -v node_modules | jq --raw-input --slurp -c 'split("\n") | .[0:-1]')" >> $GITHUB_OUTPUT
+
   list-python-projects:
     name: list python projects
     runs-on: ubuntu-latest
@@ -19,8 +30,9 @@ jobs:
       - name: List python projects
         id: list-projects
         run: echo "PROJECTS=$(find . -name "pyproject.toml" -exec dirname {} \; | jq --raw-input --slurp -c 'split("\n") | .[0:-1]')" >> $GITHUB_OUTPUT
-  tests:
-    name: run tests
+
+  python-tests:
+    name: run python tests
     runs-on: ubuntu-latest
     needs: list-python-projects
     strategy:
@@ -49,3 +61,24 @@ jobs:
           env_vars: OS,PYTHON
           fail_ci_if_error: false
           verbose: true
+
+  node-tests:
+    name: run node tests
+    runs-on: ubuntu-latest
+    needs: list-node-projects
+    strategy:
+      matrix:
+        project: ${{ fromJson(needs.list-node-projects.outputs.projects) }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: |
+          pushd ${{ matrix.project }}
+          npm install
+      - name: Run tests
+        run: |
+          pushd ${{ matrix.project }}
+          npm run ci

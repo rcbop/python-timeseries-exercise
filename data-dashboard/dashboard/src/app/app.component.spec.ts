@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.component';
+import { HttpClientModule } from '@angular/common/http';
 
-describe('AppComponent', () => {
+xdescribe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        TimeseriesGraphComponent,
+        HttpClientModule
       ],
       declarations: [
         AppComponent

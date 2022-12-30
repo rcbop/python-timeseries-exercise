@@ -19,9 +19,3 @@ API endpoint with query string filters deep-object like:
 ## TODO
 
 check usage of [mongo engine ORM](http://mongoengine.org/) with timeseries collection
-
-### Code Coverage Graph
-
-#### Sunburst graph
-
-[![graph](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graphs/sunburst.svg?token=ijcD6RzE8L)](https://docs.codecov.com/reference/sunburst)

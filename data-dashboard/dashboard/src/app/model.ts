@@ -1,4 +1,4 @@
-export interface TemperatureRawDataPoint {
+export interface RawTemperatureDataPoint {
   _id: string;
   metadata: {
     sensor_area: string;
@@ -9,9 +9,7 @@ export interface TemperatureRawDataPoint {
 
 export interface TemperatureDataPoint {
   id: string;
-  metadata: {
-    sensor_area: string;
-  }
+  sensor_area: string;
   temperature: number;
   timestamp: Date;
 }

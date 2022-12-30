@@ -1,4 +1,5 @@
 """Service layer for the API."""
+import pymongo
 from typing import Protocol
 
 from api.query import MongoQueryFilter
@@ -19,7 +20,7 @@ class TemperatureService:
         self.__mongo_query_filter = mongo_query_filter
 
     def _run_query(self, mongo_query: dict, limit: int) -> list[SensorData]:
-        cursor = self.__temp_collection.find(mongo_query).limit(limit)
+        cursor = self.__temp_collection.find(mongo_query).limit(limit).sort("timestamp", pymongo.DESCENDING)
         return [SensorData(**doc) for doc in cursor]
 
     def get_temperatures(self, filters: dict = None, limit: int = 100) -> list[SensorData]:

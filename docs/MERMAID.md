@@ -1,10 +1,11 @@
 
+
 ## Components Overview
 
 Testing mermaid :)
 
 ```mermaid
-%%{init: {'theme':'forest'}}%%
+%%{init: {'theme': 'forest' }}%%
 graph LR
   data-generator(<font color=black>Generator)
   mongodb(<font color=black>fa:fa-database MongoDB)
@@ -15,4 +16,7 @@ graph LR
   data-api-->mongodb
   data-dashboard-->data-api
   style mongodb fill:#00758f
+  style data-generator fill:#00758f
+  style data-api fill:#00758f
+  style data-dashboard fill:#00758f
 ```

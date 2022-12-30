@@ -59,5 +59,5 @@ class TemperatureSensorDAO:
         })
         self.__logger.info("inserted data [ id: %s temperature: %s timestamp: %s, sensor_area: %s]",
                            insert_result.inserted_id,
-                           f"{sensor_data.temperature:<18}",
+                           f"{sensor_data.temperature:<20}",
                            current_timestamp, f"{sensor_data.sensor_area.name:<12}")
