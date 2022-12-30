@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.isort",
+    "njpwerner.autodocstring",
+    "editorconfig.editorconfig",
+    "shardulm94.trailing-spaces",
+    "ms-vscode.vscode-typescript-next",
+    "angular.ng-template",
+    "bierner.markdown-mermaid",
+    "firefox-devtools.vscode-firefox-debug",
+    "ms-azuretools.vscode-docker"
+  ]
+}
