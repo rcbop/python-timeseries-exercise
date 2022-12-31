@@ -1,60 +1,47 @@
 # this makefile will install the required python packages for each component
-SHELL:=/bin/bash
-COMPONENTS=data-api data-generator
+SHELL:=/usr/bin/zsh
+PYTHON_COMPONENTS=data-api data-generator plotly-dashboard
+NODE_PROJECT_DIR=angular-dashboard/dashboard
 VERSION=3.11.1
 PYTHON=${VENV_DIR}/bin/python
 
 .PHONY: install
 install:
-	for component in $(COMPONENTS); do \
+	for component in $(PYTHON_COMPONENTS); do \
 		pushd $$component; \
 		pip install --upgrade pip; \
-		if [ -d $(HOME)/.pyenv/versions/$$component ]; then \
-			pyenv activate $$component; \
-		else \
-			pyenv virtualenv $(VERSION) $$component; \
-			pyenv activate $$component; \
-		fi; \
+		pyenv virtualenv --force $(VERSION) $$component; \
+		pyenv activate $$component; \
 		pip install -r requirements.txt; \
-		pip install -r requirements_dev.txt; \
+		pip install -r requirements-dev.txt; \
 		popd; \
-	done
+	done;
+	pushd $(NODE_PROJECT_DIR); \
+	npm install; \
+	popd;
 
+# delete all the python virtual environments
 .PHONY: clean
 clean:
-	for component in $(COMPONENTS); do \
-		pushd $$component; \
-		rm -rf $(HOME)/.pyenv/versions/$$component; \
-		popd; \
-	done
-
-.PHONY: test
-test:
-	for component in $(COMPONENTS); do \
-		pushd $$component; \
-		pyenv activate $$component; \
-		pytest; \
-		popd; \
-	done
-
-.PHONY: data-api
-data-api:
-	pushd data-api; \
-	pyenv activate data-api; \
-	python main.py; \
+	for component in $(PYTHON_COMPONENTS); do \
+		pyenv virtualenv-delete -f $$component; \
+	done;
+	pushd $(NODE_PROJECT_DIR); \
+	rm -rf node_modules; \
 	popd;
 
-.PHONY: data-generator
-data-generator:
-	pushd data-generator; \
-	pyenv activate data-generator; \
-	python main.py; \
-	popd;
+.PHONY: compose-build
+compose-build:
+	docker compose build
 
 .PHONY: compose-up
 compose-up:
-	docker-compose up -d
+	docker compose up -d
 
 .PHONY: compose-down
 compose-down:
-	docker-compose down -v
+	docker compose down
+
+.PHONY: compose-clean
+compose-clean:
+	docker compose down --rmi all --volumes
