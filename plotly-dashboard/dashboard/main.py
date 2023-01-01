@@ -54,7 +54,8 @@ def get_pie_graph(df: pd.DataFrame) -> go.Pie:
         df)
     return go.Pie(values=sensor_area_counts,
                   labels=sensor_area_percentages.index.to_list(),
-                  text=sensor_area_percentages.round(1).astype(str) + "%",
+                  hoverinfo="label+percent",
+                  hoverlabel={"bgcolor": "black", "bordercolor": "black", "font": {"family": "Arial", "size": 16, "color": "white"}},
                   title="Sensor Area Distribution")
 
 

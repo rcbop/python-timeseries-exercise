@@ -21,9 +21,8 @@ noData(Highcharts);
 export class TimeseriesGraphComponent implements OnInit {
   Highcharts = Highcharts;
 
-  // TODO implement event emitter to update chart start and end date from the datepicker
-  startDate?: Date = undefined;
-  endDate?: Date = undefined;
+  startDate?: Date;
+  endDate?: Date;
 
   chart: any;
   data: TemperatureDataPoint[] = [];
@@ -81,21 +80,21 @@ export class TimeseriesGraphComponent implements OnInit {
     this.updateChart();
   }
 
+  onDatePickerUpdateEvent(event: { startDate: Date, endDate: Date }) {
+    console.log('Received update event:', event);
+    this.startDate = event.startDate;
+    this.endDate = event.endDate;
+    this.updateChart();
+  }
+
+  updateData(data: TemperatureDataPoint[]) {
+    this.data = data;
+    this.chart.series[0].setData(this.data.map((point) => [point.timestamp, point.temperature]));
+  }
+
   updateChart() {
     this.timeseriesAPIService.getParsedDataWithUpdatingInterval(this.startDate, this.endDate).subscribe((data) => {
-      this.data = data;
-
-      let convertedChartData = data.map((item) => {
-        return [item.timestamp.getTime(), item.temperature];
-      });
-
-      this.chart.update(
-        {
-          series: [{
-            data: convertedChartData
-          }]
-        },
-      )
+      this.updateData(data);
     });
   }
 

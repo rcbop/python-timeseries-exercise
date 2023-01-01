@@ -8,7 +8,7 @@
     "build:docker": "ng build --configuration=docker",
     "watch": "ng build --watch --configuration=dev",
     "test": "ng test",
-    "ci": "ng test --code-coverage --watch=false --browsers=ChromeHeadless"
+    "ci": "ng test --code-coverage --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {

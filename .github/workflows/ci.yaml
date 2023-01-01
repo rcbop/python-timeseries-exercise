@@ -82,3 +82,10 @@ jobs:
         run: |
           pushd ${{ matrix.project }}
           npm run ci
+      - name: Report coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ matrix.project }}/coverage/reports/report-lcov/lcov.info
+          fail_ci_if_error: false
+          verbose: true

@@ -47,3 +47,6 @@ services:
       <<: *env
     depends_on:
       - generator
+    volumes:
+      - ./plotly-dashboard/dashboard:/app/dashboard
+    command: bash -c "python /app/dashboard/main.py"
