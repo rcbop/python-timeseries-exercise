@@ -1,5 +1,11 @@
-<div id="main-head" style="text-align:center">
-  <h1>{{ title }}</h1>
+<div id="main-container">
+  <div id="main-head" style="text-align:center">
+    <h1>{{ title }}</h1>
+  </div>
+  <div>
+    <app-datepicker></app-datepicker>
+    <!-- <app-timeseries-graph #timeseriesGraph (updateChartEvent)="timeseriesGraph.onDatePickerUpdateEvent($event)"></app-timeseries-graph> -->
+    <app-timeseries-graph #timeseriesGraph></app-timeseries-graph>
+  </div>
 </div>
-<app-timeseries-graph></app-timeseries-graph>
 <router-outlet></router-outlet>

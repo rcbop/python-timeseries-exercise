@@ -1,14 +1,9 @@
-<div>
-  <mat-form-field>
-    <input matInput [matDatepicker]="startPicker" placeholder="Start date">
-    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-    <mat-datepicker #startPicker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-form-field>
-    <input matInput [matDatepicker]="endPicker" placeholder="End date">
-    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-    <mat-datepicker #endPicker></mat-datepicker>
-  </mat-form-field>
-  <button mat-raised-button (click)="updateChart()">Update</button>
-</div>
+<mat-form-field>
+  <mat-label>Choose Date Range</mat-label>
+  <mat-date-range-input [rangePicker]="myRangePicker">
+    <input [(ngModel)]="startDate" matStartDate placeholder="Start date" (ngModelChange)="updateChart();">
+    <input [(ngModel)]="endDate" matEndDate placeholder="End date" (ngModelChange)="updateChart();">
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="myRangePicker"></mat-datepicker-toggle>
+  <mat-date-range-picker #myRangePicker></mat-date-range-picker>
+</mat-form-field>

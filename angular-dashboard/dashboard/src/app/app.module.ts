@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { TemperatureService } from './temperature.service';
 import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.component';
 import { DatepickerComponent } from './datepicker/datepicker.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { DatepickerComponent } from './datepicker/datepicker.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,

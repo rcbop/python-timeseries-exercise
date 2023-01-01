@@ -8,7 +8,7 @@
 .highcharts-data-table table {
     font-family: Verdana, sans-serif;
     border-collapse: collapse;
-    border: 1px solid #ebebeb;
+    border: 1px solid mat-color(secondary);
     margin: 10px auto;
     text-align: center;
     width: 100%;
@@ -18,7 +18,7 @@
 .highcharts-data-table caption {
     padding: 1em 0;
     font-size: 1.2em;
-    color: #555;
+    color: mat-color(text);
 }
 
 .highcharts-data-table th {
@@ -34,9 +34,9 @@
 
 .highcharts-data-table thead tr,
 .highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
+    background: mat-color(divider);
 }
 
 .highcharts-data-table tr:hover {
-    background: #f1f7ff;
+    background: mat-color(primary, '0.2');
 }

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, ViewChild } from '@angular/core';
+import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Timeseries Dashboard';
+  @ViewChild('timeseriesGraph', { static: true }) timeseriesGraph?: TimeseriesGraphComponent
 }

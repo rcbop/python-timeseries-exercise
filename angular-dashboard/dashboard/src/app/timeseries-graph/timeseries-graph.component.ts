@@ -7,7 +7,9 @@ declare var require: any;
 let Boost = require('highcharts/modules/boost');
 let noData = require('highcharts/modules/no-data-to-display');
 let More = require('highcharts/highcharts-more');
+let darkTheme = require('highcharts/themes/dark-unica');
 
+darkTheme(Highcharts);
 Boost(Highcharts);
 noData(Highcharts);
 More(Highcharts);
@@ -43,7 +45,7 @@ export class TimeseriesGraphComponent implements OnInit {
     tooltip: {
       formatter: () => {
         let index = this.chart.hoverPoint.index;
-        let point = this.data[index-1]
+        let point = this.data[index - 1]
         if (!point) {
           return 'No point found';
         }
@@ -98,5 +100,5 @@ export class TimeseriesGraphComponent implements OnInit {
     });
   }
 
-  constructor(private timeseriesAPIService: TemperatureService) {}
+  constructor(private timeseriesAPIService: TemperatureService) { }
 }
