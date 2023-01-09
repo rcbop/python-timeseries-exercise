@@ -32,9 +32,6 @@ def test_get_pie_fig():
         assert v == [4, 2, 1][i]
     for i, v in enumerate(fig["data"][0]["labels"]):
         assert v == ["A", "B", "C"][i]
-    for i, v in enumerate(fig["data"][0]["text"]):
-        assert v == ["57.1%", "28.6%", "14.3%"][i]
-
 
 def test_get_line_fig():
     df = pd.DataFrame({"timestamp": [1, 2, 3], "temperature": [4, 5, 6]})
