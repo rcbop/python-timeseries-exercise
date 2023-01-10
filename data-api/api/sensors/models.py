@@ -24,19 +24,25 @@ class PyObjectId(ObjectId):
 
 
 class SensorMetadata(BaseModel):
-    sensor_area: str = Field(...)
+    area: str = Field(...)
+    type: str = Field(...)
+    uuid: str = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
-                "sensor_area": "kitchen"
+                "metadata": {
+                    "type": "TEMPERATURE",
+                    "area": "KITCHEN",
+                    "uuid": "f0e060f737504d2d"
+                }
             }
         }
 
 
 class SensorData(BaseModel):
     id: PyObjectId = Field(default_factory=uuid.uuid4, alias="_id")
-    temperature: float = Field(...)
+    value: float = Field(...)
     timestamp: datetime = Field(...)
     metadata: Optional[SensorMetadata] = Field(...)
 
@@ -47,10 +53,12 @@ class SensorData(BaseModel):
         schema_extra = {
             "example": {
                 "_id": "066de609-b04a-4b30-b46c-32537c7f1f6e",
+                "value": 5.474,
+                "timestamp": "2023-01-10T22:43:29.398881",
                 "metadata": {
-                    "sensor_area": "kitchen"
-                },
-                "temperature": 23.4,
-                "timestamp": "2022-12-27T21:29:37.448000"
+                    "type": "TEMPERATURE",
+                    "area": "KITCHEN",
+                    "uuid": "f0e060f737504d2d"
+                }
             }
         }

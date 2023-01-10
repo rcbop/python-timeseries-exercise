@@ -3,11 +3,14 @@ from urllib.parse import parse_qs
 
 from api.constants import MONGO_OPERATOR_SYMBOLS
 
+
 class InvalidQueryError(ValueError):
     """Exception raised when an invalid query string is used."""
 
+
 class InvalidOperatorError(InvalidQueryError):
     """Exception raised when an invalid operator is used in a query string."""
+
 
 class InvalidFieldError(InvalidQueryError):
     """Exception raised when an invalid field is used in a query string."""
@@ -19,7 +22,7 @@ class QueryFilters:
         self.__valid_fields = valid_fields
         self.__valid_operators = valid_operators
 
-    # Allow regular expression to group nested key like <key.subkey> format (e.g. metadata.sensor_area)
+    # Allow regular expression to group nested key like <key.subkey> format (e.g. metadata.area)
     FILTERS_REGEX = r'(?P<key>[^\[\.]+)(?:\[(?P<value>[^\]]+)\])?(?:\.(?P<subkey>[^\.]+))?'
 
     def parse_and_validate(self, raw_query: str) -> dict[str, dict[str, str]]:
@@ -37,7 +40,8 @@ class QueryFilters:
             dict[str, dict[str, str]]: The parsed query string.
         """
         if not self._is_balanced_brackets(raw_query):
-            raise InvalidQueryError("The query string operator brackets is not balanced.")
+            raise InvalidQueryError(
+                "The query string operator brackets is not balanced.")
 
         filters = self.parse_query_string_into_filters(raw_query)
         filters = self._cleanup_query_empty_values(filters)
@@ -59,7 +63,7 @@ class QueryFilters:
             returns False if the query string is not balanced e.g: ?timestamp[=2021-01-01T00:00:00
 
             this will not work as intended if the closing bracket is in another field
-            e.g: ?timestamp[=2021-01-01T00:00:00&metadata.sensor_area=kitchen]
+            e.g: ?timestamp[=2021-01-01T00:00:00&metadata.area=kitchen]
 
             to fix we would need to use a grammar parser like pyparsing
 
@@ -80,12 +84,12 @@ class QueryFilters:
 
         This query string:
 
-            ?timestamp[gte]=2021-01-01T00:00:00&timestamp[lte]=2021-01-05T00:00:00&metadata.sensor_area=kitchen&limit=100"
+            ?timestamp[gte]=2021-01-01T00:00:00&timestamp[lte]=2021-01-05T00:00:00&metadata.area=kitchen&limit=100"
 
         Should result in a dictionary like:
             {
                 "timestamp": { "gte": "2021-01-01T00:00:00", "lte": "2021-01-05T00:00:00" },
-                "metadata": { "sensor_area": "kitchen" },
+                "metadata": { "area": "kitchen" },
                 "limit": "100"
             }
 
@@ -151,7 +155,8 @@ class QueryFilters:
                 continue
             for operator in value.keys():
                 if operator not in self.__valid_operators:
-                    raise InvalidOperatorError(f"Invalid filter operator: {operator}")
+                    raise InvalidOperatorError(
+                        f"Invalid filter operator: {operator}")
 
     def _cleanup_query_empty_values(self, query: dict) -> dict:
         """Traverse dictionary recursiverly and clean empty fields and operators.

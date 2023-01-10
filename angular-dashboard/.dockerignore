@@ -1,5 +1,6 @@
-node_modules
-dist
-.angular
-README.md
-.editorconfig
+dashboard/node_modules
+dashboard/dist
+dashboard/coverage
+dashboard/.angular
+dashboard/README.md
+dashboard/.editorconfig

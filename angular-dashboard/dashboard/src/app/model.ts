@@ -1,15 +1,19 @@
 export interface RawTemperatureDataPoint {
   _id: string;
-  metadata: {
-    sensor_area: string;
-  }
-  temperature: number;
+  value: number;
   timestamp: string;
+  metadata: {
+    area: string;
+    type: string;
+    uuid: string;
+  }
 }
 
 export interface TemperatureDataPoint {
   id: string;
-  sensor_area: string;
-  temperature: number;
+  value: number;
   timestamp: Date;
+  sensor_uuid: string;
+  area: string;
+  type: string;
 }

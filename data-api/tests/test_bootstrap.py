@@ -1,14 +1,16 @@
-import pytest
 from unittest.mock import Mock, patch
 
+import pytest
 from api.bootstrap import (DEFAULT_MONGO_DB_NAME,
-                           DEFAULT_MONGO_TEMP_COLLECTION_NAME,
-                           DEFAULT_MONGO_URI, EnvConfig, bootstrap_di,
-                           get_env_config)
+                           DEFAULT_MONGO_TS_COLLECTION_NAME, DEFAULT_MONGO_URI,
+                           EnvConfig, bootstrap_di, get_env_config)
+
+
 @pytest.fixture
 def fix_env_config() -> EnvConfig:
     return EnvConfig(
-        DEFAULT_MONGO_URI, DEFAULT_MONGO_DB_NAME, DEFAULT_MONGO_TEMP_COLLECTION_NAME)
+        DEFAULT_MONGO_URI, DEFAULT_MONGO_DB_NAME, DEFAULT_MONGO_TS_COLLECTION_NAME)
+
 
 @patch("api.bootstrap.MongoClient")
 @patch("api.bootstrap.get_env_config")

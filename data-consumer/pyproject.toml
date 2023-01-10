@@ -1,0 +1,16 @@
+[build-system]
+requires = [
+  "setuptools >= 40.9.0",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+#addopts = "--cov=consumer --cov-report=xml"
+python_files = ["test_*.py", "*_test.py", "tests/*.py"]
+python_functions = ["test"]
+python_classes = ["Test"]
+testpaths = ["tests"]
+
+markers = [
+  "unit"
+]

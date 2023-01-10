@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+  data-consumer:
+    container_name: data-consumer
+    build:
+      context: data-consumer
+      target: test
+  ts-sensor:
+    container_name: ts-sensor
+    build:
+      context: data-sensor
+      target: test
+  api:
+    container_name: ts-api
+    build:
+      context: data-api
+      target: test
+  angular-dashboard:
+    container_name: angular-dashboard
+    build:
+      context: angular-dashboard
+      target: test
+  plotly-dashboard:
+    container_name: plotly-dashboard
+    build:
+      context: plotly-dashboard
+      target: test

@@ -1,0 +1,5 @@
+pytest==7.2.0
+pytest_cov==4.0.0
+autopep8==2.0.1
+
+-e .
