@@ -5,7 +5,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
-addopts = "--cov=dashboard --cov-report=xml"
+addopts = "--cov=dashboard --cov-report=xml --junitxml=dashboard-test-results.xml"
 python_files = ["test_*.py", "*_test.py", "tests/*.py"]
 python_functions = ["test"]
 python_classes = ["Test"]

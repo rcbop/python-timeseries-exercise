@@ -8,7 +8,7 @@
     "build:docker": "ng build --configuration=docker",
     "watch": "ng build --watch --configuration=dev",
     "test": "ng test",
-    "ci": "ng test --code-coverage --browsers=ChromeHeadless"
+    "ci": "ng test --karma-config=karma.conf.js --code-coverage --browsers=ChromeHeadless"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +38,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "karma-junit-reporter": "^2.0.1",
     "typescript": "~4.8.2"
   }
 }

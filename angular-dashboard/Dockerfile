@@ -4,8 +4,14 @@ COPY dashboard/package.json dashboard/package-lock.json ./
 RUN npm install
 COPY dashboard/. .
 
-FROM base AS test
-RUN npm run ci
+FROM zenika/alpine-chrome:with-node AS test
+USER root
+WORKDIR /app
+COPY dashboard/package.json dashboard/package-lock.json ./
+RUN npm install
+COPY dashboard/. .
+RUN chown -R chrome:chrome /app
+USER chrome
 
 FROM base AS build
 RUN npm run build:docker

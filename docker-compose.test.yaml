@@ -18,9 +18,11 @@ services:
       target: test
   angular-dashboard:
     container_name: angular-dashboard
+    privileged: true
     build:
       context: angular-dashboard
       target: test
+    command: npm run ci
   plotly-dashboard:
     container_name: plotly-dashboard
     build:
