@@ -2,7 +2,7 @@
 
 Python exercise
 
-![Tests](https://github.com/rcbop/python-timeseries/actions/workflows/ci.yaml/badge.svg)&nbsp;&nbsp;[![codecov](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graph/badge.svg?token=ijcD6RzE8L)](https://codecov.io/gh/rcbop/timeseries-visualization)
+![Tests](https://github.com/rcbop/python-timeseries/actions/workflows/ci.yaml/badge.svg)&nbsp;&nbsp;[![codecov](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graph/badge.svg?token=ijcD6RzE8L)](https://codecov.io/gh/rcbop/timeseries-visualization)&nbsp;&nbsp;[![CodeQL](https://github.com/rcbop/python-timeseries/workflows/CodeQL/badge.svg)](https://github.com/rcbop/python-timeseries/actions/workflows/github-code-scanning/codeql)
 
 ## Requirements
 
