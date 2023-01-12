@@ -43,6 +43,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.11
+          cache: 'pip'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -54,7 +55,7 @@ jobs:
           pushd ${{ matrix.project }}
           python -m pytest
       - name: Archive test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ matrix.project }}/*-test-results.xml
       - name: Report coverage
@@ -78,6 +79,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.project }}/package-lock.json
       - name: Install dependencies
         run: |
           pushd ${{ matrix.project }}
@@ -87,7 +90,7 @@ jobs:
           pushd ${{ matrix.project }}
           npm run ci
       - name: Archive test results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: ${{ matrix.project }}/reports/*-test-results.xml
       - name: Report coverage
@@ -104,7 +107,7 @@ jobs:
     needs: [node-tests, python-tests]
     steps:
     - name: Download test results
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
     - name: List test results
       run: |
         find . -name "*.xml"
