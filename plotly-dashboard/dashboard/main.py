@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import pymongo
 from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
+from pandas.io.json import json_normalize
 from pymongo.collection import Collection
 
 INTERVAL_MILLISECONDS = 5000
@@ -28,7 +29,6 @@ def fetch_latest_data(collection: Collection, limit: int = 100) -> list[dict]:
 
 def calculate_percentage_distribution(df: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
     """Calculates the percentage distribution of the sensor_area column."""
-    df["area"] = df["metadata"].apply(lambda x: x["area"])
     sensor_area_counts = df["area"].value_counts()
     sensor_area_percentages = sensor_area_counts / sensor_area_counts.sum() * 100
     return sensor_area_counts, sensor_area_percentages
@@ -37,7 +37,10 @@ def calculate_percentage_distribution(df: pd.DataFrame) -> tuple[pd.Series, pd.S
 def get_latest_data_frame(collection: Collection) -> pd.DataFrame:
     """Updates the DataFrame with the latest temperature data points."""
     data = fetch_latest_data(collection)
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    df[['type', 'area', 'uuid']] = df['metadata'].apply(lambda x: pd.Series(x))
+    df.drop(columns=["metadata"], inplace=True)
+    return df
 
 
 def get_line_fig(df: pd.DataFrame) -> go.Figure:
@@ -45,6 +48,8 @@ def get_line_fig(df: pd.DataFrame) -> go.Figure:
     return px.line(df,
                    x="timestamp",
                    y="value",
+                   color="uuid",
+                   hover_name="type",
                    title="Sensor Data Timeseries")
 
 
@@ -63,7 +68,7 @@ def get_pie_graph(df: pd.DataFrame) -> go.Pie:
 def get_pie_fig(df: pd.DataFrame) -> go.Figure:
     """Creates a pie chart figure of the sensor_area distribution."""
     pie_graph = get_pie_graph(df)
-    return {"data": [pie_graph], "layout": {"title": {"text": "Sensor Area Distribution"}}}
+    return go.Figure(data=[pie_graph], layout={"title": {"text": "Sensor Area Distribution"}})
 
 
 def get_collection(cfg: DBConfig) -> Collection:
@@ -108,7 +113,7 @@ def main():
     line_fig = get_line_fig(df)
     pie_fig = get_pie_fig(df)
     page_1_layout = get_page_layout(
-        "sensor-data-timeseries-plot", "Sensor Data Over Time", line_fig)
+        "line-plot", "Sensor Data Over Time", line_fig)
     page_2_layout = get_page_layout(
         "pie-chart", "Sensor Area Distribution", pie_fig)
 
@@ -121,7 +126,7 @@ def main():
 
     # Callback function to update the plot data
     @app.callback(
-        Output("sensor-data-timeseries-plot", "figure"),
+        Output("line-plot", "figure"),
         [Input("interval-component", "n_intervals")]
     )
     def update_plot(n_intervals):
