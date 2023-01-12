@@ -1,30 +1,34 @@
 import pytest
-from api.filters import QueryFilters, InvalidFieldError, InvalidOperatorError, InvalidQueryError
+from api.filters import (InvalidFieldError, InvalidOperatorError,
+                         InvalidQueryError, QueryFilters)
 
-valid_fields= [
+valid_fields = [
     "timestamp",
     "metadata",
+    "metadata.area",
+    "metadata.type",
+    "metadata.uuid",
+    "value",
     "limit",
 ]
+
 
 @pytest.mark.parametrize("test_case,raw_query, expected", [
     (
         "complex query >>>",
-        "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.sensor_area=kitchen",
+        "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=kitchen",
         {
             "timestamp": {
                 "gte": "2022-12-28T21:29:37.448000",
                 "lte": "2022-12-28T20:35:41.410000",
             },
             "limit": "2",
-            "metadata": {
-                "sensor_area": "kitchen",
-            }
+            "metadata.area": "kitchen"
         }
     ),
     (
         "empty values >>>",
-        "timestamp[gte]=2022-12-28T21:29:37.448000&limit=2&metadata.sensor_area=",
+        "timestamp[gte]=2022-12-28T21:29:37.448000&limit=2&metadata.area=",
         {
             "timestamp": {
                 "gte": "2022-12-28T21:29:37.448000",
@@ -34,15 +38,13 @@ valid_fields= [
     ),
     (
         "repeated values - only the first one is considered >>>",
-        "timestamp[gte]=2022-12-28T21:29:37.448000&limit=2&metadata.sensor_area=kitchen&metadata.sensor_area=bedroom",
+        "timestamp[gte]=2022-12-28T21:29:37.448000&limit=2&metadata.area=kitchen&metadata.area=bedroom",
         {
             "timestamp": {
                 "gte": "2022-12-28T21:29:37.448000",
             },
             "limit": "2",
-            "metadata": {
-                "sensor_area": "kitchen",
-            }
+            "metadata.area": "kitchen",
         }
     ),
     (
@@ -56,7 +58,7 @@ valid_fields= [
     ),
     (
         "multiple empty values >>>",
-        "timestamp[gte]=&limit=2&timestamp[lt]=2022-12-31T21:29:37&metadata.sensor_area=&metadata.sensor_area=",
+        "timestamp[gte]=&limit=2&timestamp[lt]=2022-12-31T21:29:37&metadata.area=&metadata.area=",
         {
             "limit": "2",
             "timestamp": {
@@ -68,29 +70,30 @@ valid_fields= [
 def test_parse(test_case: str, raw_query: str, expected: dict[str, dict[str, str]]):
     """Test the parse_query_string function."""
     print(f"Test case: {test_case}")
-    result = QueryFilters(valid_fields=valid_fields).parse_and_validate(raw_query)
+    result = QueryFilters(
+        valid_fields=valid_fields).parse_and_validate(raw_query)
     assert result == expected
 
 
-@pytest.mark.parametrize("test_case,raw_query,error_raised", [
+@ pytest.mark.parametrize("test_case,raw_query,error_raised", [
     (
         "invalid field >>>",
-        "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.sensor_area=kitchen&invalid_field=invalid_value",
+        "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=kitchen&invalid_field=invalid_value",
         InvalidFieldError
     ),
     (
         "invalid operator >>>",
-        "timestamp[invalid_operator]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.sensor_area=kitchen",
-        InvalidOperatorError
+        "timestamp[invalid_operator]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=kitchen",
+        InvalidQueryError
     ),
     (
         "missing value ignored >>>",
-        "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.sensor_area=",
+        "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=",
         None
     ),
     (
         "invalid query - unbalanced brackets >>>",
-        "timestamp[=&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.sensor_area=kitchen",
+        "timestamp[=&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=kitchen",
         InvalidQueryError
     ),
 ])
