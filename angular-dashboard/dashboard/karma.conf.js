@@ -5,6 +5,7 @@ module.exports = function(config) {
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-coverage'),
+      require('karma-junit-reporter'),
       require('karma-jasmine-html-reporter'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
@@ -14,20 +15,31 @@ module.exports = function(config) {
     preprocessors: {
       'src/**/*.js': ['coverage'],
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'junit', 'coverage'],
     coverageReporter: {
-      dir: 'coverage/reports',
+      dir: 'reports/coverage',
       reporters: [
         { type: 'html', subdir: 'report-html' },
         { type: 'lcov', subdir: 'report-lcov' }
       ],
       fixWebpackSourcePaths: true
     },
+    junitReporter: {
+      outputDir: 'reports',
+      useBrowserName: false,
+      outputFile: 'angular-dashboard-test-results.xml'
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
     browsers: ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     singleRun: true,
     restartOnFileChange: false
   });

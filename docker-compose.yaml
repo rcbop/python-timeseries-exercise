@@ -1,9 +1,13 @@
 version: '3.2'
 
-x-env: &env
+x-mongoenv: &mongoenv
   MONGO_URI: mongodb://ts-db:27017/
   MONGO_DB_NAME: timeseries-visualization-test
-  MONGO_COLLECTION_NAME: temperature
+  MONGO_COLLECTION_NAME: sensor_data
+
+x-mqttenv: &mqttenv
+  MQTT_HOST: mqtt-broker
+  MQTT_PORT: 1883
 
 services:
   mongodb:
@@ -11,28 +15,84 @@ services:
     image: mongo:6.0.3
     ports:
       - 27017:27017
-  generator:
-    container_name: ts-generator
+  mqtt-broker:
+    container_name: mqtt-broker
     build:
-      context: data-generator
-    environment:
-      <<: *env
+      context: mqtt-broker
+    ports:
+      - 1883:1883
     depends_on:
       - mongodb
+  data-consumer:
+    container_name: data-consumer
+    build:
+      context: data-consumer
+      target: base
+    environment:
+      <<: *mongoenv
+      <<: *mqttenv
+    depends_on:
+      - mqtt-broker
+  ts-sensor-1:
+    container_name: ts-sensor-1
+    build:
+      context: data-sensor
+      target: base
+    environment:
+      <<: *mqttenv
+      SENSOR_AREA: KITCHEN
+      SENSOR_TYPE: TEMPERATURE
+    depends_on:
+      - data-consumer
+  ts-sensor-2:
+    container_name: ts-sensor-2
+    build:
+      context: data-sensor
+      target: base
+    environment:
+      <<: *mqttenv
+      SENSOR_AREA: KITCHEN
+      SENSOR_TYPE: TEMPERATURE
+    depends_on:
+      - data-consumer
+  ts-sensor-3:
+    container_name: ts-sensor-3
+    build:
+      context: data-sensor
+      target: base
+    environment:
+      <<: *mqttenv
+      SENSOR_TYPE: HUMIDITY
+      SENSOR_AREA: BEDROOM
+    depends_on:
+      - data-consumer
+  ts-sensor-4:
+    container_name: ts-sensor-4
+    build:
+      context: data-sensor
+      target: base
+    environment:
+      <<: *mqttenv
+      SENSOR_TYPE: TEMPERATURE
+      SENSOR_AREA: BEDROOM
+    depends_on:
+      - data-consumer
   api:
     container_name: ts-api
     build:
       context: data-api
+      target: base
     ports:
       - 8000:8000
     environment:
-      <<: *env
+      <<: *mongoenv
     depends_on:
-      - generator
+      - data-consumer
   angular-dashboard:
     container_name: angular-dashboard
     build:
       context: angular-dashboard
+      target: prod
     ports:
       - 80:80
     depends_on:
@@ -41,10 +101,11 @@ services:
     container_name: plotly-dashboard
     build:
       context: plotly-dashboard
+      target: base
     ports:
       - 8050:8050
     environment:
-      <<: *env
+      <<: *mongoenv
     depends_on:
       - generator
     volumes:

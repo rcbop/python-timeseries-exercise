@@ -27,14 +27,37 @@ export class TimeseriesGraphComponent implements OnInit {
   endDate?: Date;
 
   chart: any;
-  data: TemperatureDataPoint[] = [];
+  allSeriesData: { [key: string]: TemperatureDataPoint[] } = {};
+
+  private formatTooltipForData = (data: TemperatureDataPoint): string => {
+    let timestamp = new Date(data.timestamp).toISOString().slice(0, 19).replace('T', ' ');
+    if (data.type === 'TEMPERATURE') {
+      return `SensorID: ${data.sensor_uuid}</br>Sensor area: <b>${data.area}</b><br>Temperature: ${data.value}°C<br>Timestamp: ${timestamp}`;
+    } else if (data.type === 'HUMIDITY') {
+      return `SensorID: ${data.sensor_uuid}</br>Sensor area: <b>${data.area}</b><br>Humidity: ${data.value}%<br>Timestamp: ${timestamp}`;
+    } else {
+      return `SensorID: ${data.sensor_uuid}</br>Sensor area: <b>${data.area}</b><br>Reading: ${data.value}<br>Timestamp: ${timestamp}`;
+    }
+  }
+
+  private formatTooltip = () => {
+    let point = this.chart.hoverPoint;
+    if (!point) { return 'No point found'; }
+    let key = point.series.name;
+    let data = this.allSeriesData[key][point.index];
+    if (!data) {
+      return 'No point found';
+    }
+    return this.formatTooltipForData(data);
+
+  }
 
   private options: any = {
     chart: {
       zoomType: 'x'
     },
     title: {
-      text: 'House Temperature Data',
+      text: 'House Sensors Data',
       align: 'left'
     },
     subtitle: {
@@ -43,14 +66,7 @@ export class TimeseriesGraphComponent implements OnInit {
       align: 'left'
     },
     tooltip: {
-      formatter: () => {
-        let index = this.chart.hoverPoint.index;
-        let point = this.data[index - 1]
-        if (!point) {
-          return 'No point found';
-        }
-        return `Sensor area: <b>${point.sensor_area}</b><br>Temperature: ${point.temperature}<br>Timestamp: ${point.temperature}`;
-      }
+      formatter: () => this.formatTooltip()
     },
     legend: {
       enabled: false
@@ -67,14 +83,10 @@ export class TimeseriesGraphComponent implements OnInit {
     yAxis: {
       type: 'linear',
       title: {
-        text: 'Temperature (°C)'
+        text: 'Temperature (°C) / Humidity (%)'
       }
     },
-    series: [{
-      name: 'Temperature Sensors',
-      type: 'line',
-      data: []
-    }]
+    series: []
   }
 
   ngOnInit(): void {
@@ -89,14 +101,23 @@ export class TimeseriesGraphComponent implements OnInit {
     this.updateChart();
   }
 
-  updateData(data: TemperatureDataPoint[]) {
-    this.data = data;
-    this.chart.series[0].setData(this.data.map((point) => [point.timestamp, point.temperature]));
+  updateDataDictionary(data: { [key: string]: TemperatureDataPoint[] }): void {
+    while(this.chart.series.length > 0)
+      this.chart.series[0].remove(true);
+
+    for (const key in data) {
+      const seriesData = data[key].map((point) => [point.timestamp, point.value]);
+      this.chart.addSeries({
+        name: key,
+        data: seriesData
+      });
+    }
+    this.allSeriesData = data;
   }
 
   updateChart() {
-    this.timeseriesAPIService.getParsedDataWithUpdatingInterval(this.startDate, this.endDate).subscribe((data) => {
-      this.updateData(data);
+    this.timeseriesAPIService.getParsedDataWithUpdatingIntervalGroupedBySensor(this.startDate, this.endDate).subscribe((data) => {
+      this.updateDataDictionary(data);
     });
   }
 

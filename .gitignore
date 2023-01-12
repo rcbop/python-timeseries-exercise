@@ -5,3 +5,6 @@ __pycache__
 .venv
 *.egg-info
 coverage.xml
+test-results.xml
+node_modules
+*-test-results.xml

@@ -1,7 +1,9 @@
 import re
 from datetime import datetime
+from decimal import Decimal
 
 from api.constants import ISO_TIMESTAMP_REGEX, MONGO_OPERATOR_SYMBOLS
+
 
 class InvalidMongoQueryFilterError(ValueError):
     """Exception raised when an invalid query filter is used."""
@@ -46,6 +48,11 @@ class MongoQueryFilter():
         # If the value is a dictionary, iterate over the key-value pairs
         subquery = {}
         for subkey, subvalue in value.items():
+            if isinstance(subvalue, str):
+                try:
+                    subvalue = float(subvalue)
+                except:
+                    pass
             # Check if the subkey is in the operator_symbols map
             if subkey in self.__mongo_operator_symbols:
                 # If the subkey is an operator, convert it to the corresponding MongoDB operator
@@ -54,7 +61,6 @@ class MongoQueryFilter():
                 # If the subkey is not an operator, add it to the subquery as-is
                 subquery[subkey] = subvalue
         return subquery
-
 
     def convert_isotimestamp_to_datetime(self, mongo_query: dict) -> dict:
         """Convert ISO timestamp strings to datetime objects for pymongo.

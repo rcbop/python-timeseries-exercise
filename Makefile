@@ -45,3 +45,7 @@ compose-down:
 .PHONY: compose-clean
 compose-clean:
 	docker compose down --rmi all --volumes
+
+.PHONY: test
+test:
+	docker compose -f docker-compose.test.yaml up --build --abort-on-container-exit

@@ -28,8 +28,8 @@ def fetch_latest_data(collection: Collection, limit: int = 100) -> list[dict]:
 
 def calculate_percentage_distribution(df: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
     """Calculates the percentage distribution of the sensor_area column."""
-    df["sensor_area"] = df["metadata"].apply(lambda x: x["sensor_area"])
-    sensor_area_counts = df["sensor_area"].value_counts()
+    df["area"] = df["metadata"].apply(lambda x: x["area"])
+    sensor_area_counts = df["area"].value_counts()
     sensor_area_percentages = sensor_area_counts / sensor_area_counts.sum() * 100
     return sensor_area_counts, sensor_area_percentages
 
@@ -41,11 +41,11 @@ def get_latest_data_frame(collection: Collection) -> pd.DataFrame:
 
 
 def get_line_fig(df: pd.DataFrame) -> go.Figure:
-    """Creates a line plot of the temperature timeseries."""
+    """Creates a line plot of the sensor data timeseries."""
     return px.line(df,
                    x="timestamp",
-                   y="temperature",
-                   title="Temperature Timeseries")
+                   y="value",
+                   title="Sensor Data Timeseries")
 
 
 def get_pie_graph(df: pd.DataFrame) -> go.Pie:
@@ -55,7 +55,8 @@ def get_pie_graph(df: pd.DataFrame) -> go.Pie:
     return go.Pie(values=sensor_area_counts,
                   labels=sensor_area_percentages.index.to_list(),
                   hoverinfo="label+percent",
-                  hoverlabel={"bgcolor": "black", "bordercolor": "black", "font": {"family": "Arial", "size": 16, "color": "white"}},
+                  hoverlabel={"bgcolor": "black", "bordercolor": "black", "font": {
+                      "family": "Arial", "size": 16, "color": "white"}},
                   title="Sensor Area Distribution")
 
 
@@ -94,7 +95,7 @@ def get_app_layout(all_tabs: list[dcc.Tab]) -> html.Div:
 def main():
     DEFAULT_MONGO_URI = "mongodb://localhost:27017/"
     DEFAULT_MONGO_DB_NAME = "timeseries-visualization-test"
-    DEFAULT_COLLECTION_NAME = "temperature"
+    DEFAULT_COLLECTION_NAME = "sensor_data"
 
     mongo_uri = os.getenv("MONGO_URI", DEFAULT_MONGO_URI)
     db_name = os.getenv("MONGO_DB_NAME", DEFAULT_MONGO_DB_NAME)
@@ -107,7 +108,7 @@ def main():
     line_fig = get_line_fig(df)
     pie_fig = get_pie_fig(df)
     page_1_layout = get_page_layout(
-        "temperature-timeseries-plot", "Temperature Over Time", line_fig)
+        "sensor-data-timeseries-plot", "Sensor Data Over Time", line_fig)
     page_2_layout = get_page_layout(
         "pie-chart", "Sensor Area Distribution", pie_fig)
 
@@ -120,7 +121,7 @@ def main():
 
     # Callback function to update the plot data
     @app.callback(
-        Output("temperature-timeseries-plot", "figure"),
+        Output("sensor-data-timeseries-plot", "figure"),
         [Input("interval-component", "n_intervals")]
     )
     def update_plot(n_intervals):

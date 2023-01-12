@@ -3,7 +3,7 @@ import logging
 
 import uvicorn
 from api.bootstrap import bootstrap_di
-from api.temperature.routes import router
+from api.sensors.routes import router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -26,7 +26,7 @@ def main():
     )
 
     app.include_router(
-        router, tags=["sensors", "temperature"], prefix="/temperature")
+        router, tags=["sensors", "temperature", "humidity"], prefix="/sensors")
     uvicorn.run(app, host="0.0.0.0", port=8000,
                 log_level="info", proxy_headers=True)
 
