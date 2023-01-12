@@ -110,13 +110,14 @@ class QueryFilters:
             match = re.match(self.FILTERS_REGEX, key)
             group_dict = match.groupdict()
             if not match:
-                raise InvalidQueryError(f'Invalid query string: {raw_query}')
+                raise InvalidQueryError(
+                    f'Invalid query string: {raw_query}')
 
             key = group_dict['key']
             if group_dict['subkey']:
-                # If a subkey was matched, add it as a nested dictionary
-                filter.setdefault(key, {})[
-                    group_dict['subkey']] = value[0]
+                # If a subkey was matched, add the key-value pair to the dictionary
+                newkey = f"{key}.{group_dict['subkey']}"
+                filter[newkey] = value[0]
             elif group_dict['value']:
                 # If a value was matched, add it to the dictionary
                 filter.setdefault(key, {})[

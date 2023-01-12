@@ -11,11 +11,47 @@ Python exercise
 - [Pyenv virtualenv](https://github.com/pyenv/pyenv-virtualenv)
 - `GNU make`
 
+## Development
+
+Run all tests with docker compose:
+
+```
+make test
+```
+
+Spin up development environment:
+
+```
+make compose-up
+```
+
 ## Query String Filters
 
 API endpoint with query string filters deep-object like:
 
-![query_string_filters](./docs/query_string_filters.png)
+```
+?timestamp[gte]=2021-01-01T00:00:00&timestamp[lte]=2021-01-05T00:00:00&metadata.area=kitchen&limit=100"
+```
+
+will become mongo query:
+
+```
+{
+    "timestamp": { $gte: ISODate("2021-01-01T00:00:00"), $lte: ISODate("2021-01-05T00:00:00") },
+    "metadata": { "area": "kitchen" },
+    "limit": 100
+}
+```
+
+## Preview
+
+Query result:
+
+![query-result](./docs/query-result.png)
+
+Dashboard:
+
+![dashboard](./docs/dashboard.png)
 
 ## TODO
 
