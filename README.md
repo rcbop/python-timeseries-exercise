@@ -47,7 +47,7 @@ will become mongo query:
 
 Query result:
 
-![query-result](./docs/query-result.png)
+![query-result](./docs/query_result.png)
 
 Dashboard:
 
