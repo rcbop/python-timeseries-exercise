@@ -1,18 +1,18 @@
+import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.component';
-import { HttpClientModule } from '@angular/common/http';
 
-xdescribe('AppComponent', () => {
+describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        TimeseriesGraphComponent,
         HttpClientModule
       ],
       declarations: [
+        TimeseriesGraphComponent,
         AppComponent
       ],
     }).compileComponents();
@@ -24,16 +24,16 @@ xdescribe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'dashboard'`, () => {
+  it(`should have as title 'Timeseries Dashboard'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('dashboard');
+    expect(app.title).toEqual('Timeseries Dashboard');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('dashboard app is running!');
+    expect(compiled.querySelector('.main-title')?.textContent).toContain('Timeseries Dashboard');
   });
 });

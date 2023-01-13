@@ -29,7 +29,7 @@ export class TimeseriesGraphComponent implements OnInit {
   chart: any;
   allSeriesData: { [key: string]: TemperatureDataPoint[] } = {};
 
-  private formatTooltipForData = (data: TemperatureDataPoint): string => {
+  formatTooltipForData = (data: TemperatureDataPoint): string => {
     let timestamp = new Date(data.timestamp).toISOString().slice(0, 19).replace('T', ' ');
     if (data.type === 'TEMPERATURE') {
       return `SensorID: ${data.sensor_uuid}</br>Sensor area: <b>${data.area}</b><br>Temperature: ${data.value}°C<br>Timestamp: ${timestamp}`;
@@ -40,7 +40,7 @@ export class TimeseriesGraphComponent implements OnInit {
     }
   }
 
-  private formatTooltip = () => {
+  formatTooltip = () => {
     let point = this.chart.hoverPoint;
     if (!point) { return 'No point found'; }
     let key = point.series.name;
@@ -89,6 +89,8 @@ export class TimeseriesGraphComponent implements OnInit {
     series: []
   }
 
+  constructor(private timeseriesAPIService: TemperatureService) { }
+
   ngOnInit(): void {
     this.chart = Highcharts.chart('container', this.options);
     this.updateChart();
@@ -121,5 +123,4 @@ export class TimeseriesGraphComponent implements OnInit {
     });
   }
 
-  constructor(private timeseriesAPIService: TemperatureService) { }
 }

@@ -29,7 +29,7 @@ export class TemperatureService {
    * "type": "temperature"
    * }
    * */
-  private parseDataPoint(item: RawTemperatureDataPoint): TemperatureDataPoint {
+  parseDataPoint(item: RawTemperatureDataPoint): TemperatureDataPoint {
     return {
       id: item._id,
       timestamp: new Date(item.timestamp),

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,10 +10,9 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DatepickerComponent } from './datepicker/datepicker.component';
 import { TemperatureService } from './temperature.service';
 import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.component';
-import { DatepickerComponent } from './datepicker/datepicker.component';
-import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule
   ],
   providers: [

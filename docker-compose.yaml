@@ -10,6 +10,9 @@ x-mqttenv: &mqttenv
   MQTT_PORT: 1883
 
 services:
+  ################################
+  # data ingestion and storage
+  ################################
   mongodb:
     container_name: ts-db
     image: mongo:6.0.3
@@ -23,6 +26,7 @@ services:
       - 1883:1883
     depends_on:
       - mongodb
+
   data-consumer:
     container_name: data-consumer
     build:
@@ -32,6 +36,49 @@ services:
       <<: [*mongoenv, *mqttenv]
     depends_on:
       - mqtt-broker
+  ################################
+  # REST API
+  ################################
+  api:
+    container_name: ts-api
+    build:
+      context: data-api
+      target: base
+    ports:
+      - 8000:8000
+    environment:
+      <<: *mongoenv
+    depends_on:
+      - data-consumer
+  ################################
+  # visualization dashboards
+  ################################
+  angular-dashboard:
+    container_name: angular-dashboard
+    build:
+      context: angular-dashboard
+      target: prod
+    ports:
+      - 80:80
+    depends_on:
+      - api
+  plotly-dashboard:
+    container_name: plotly-dashboard
+    build:
+      context: plotly-dashboard
+      target: base
+    ports:
+      - 8050:8050
+    environment:
+      <<: *mongoenv
+    depends_on:
+      - data-consumer
+    volumes:
+      - ./plotly-dashboard/dashboard:/app/dashboard
+    command: bash -c "python /app/dashboard/main.py"
+  ################################
+  # sensors
+  ################################
   ts-sensor-1:
     container_name: ts-sensor-1
     build:
@@ -76,37 +123,3 @@ services:
       SENSOR_AREA: BEDROOM
     depends_on:
       - data-consumer
-  api:
-    container_name: ts-api
-    build:
-      context: data-api
-      target: base
-    ports:
-      - 8000:8000
-    environment:
-      <<: *mongoenv
-    depends_on:
-      - data-consumer
-  angular-dashboard:
-    container_name: angular-dashboard
-    build:
-      context: angular-dashboard
-      target: prod
-    ports:
-      - 80:80
-    depends_on:
-      - api
-  plotly-dashboard:
-    container_name: plotly-dashboard
-    build:
-      context: plotly-dashboard
-      target: base
-    ports:
-      - 8050:8050
-    environment:
-      <<: *mongoenv
-    depends_on:
-      - generator
-    volumes:
-      - ./plotly-dashboard/dashboard:/app/dashboard
-    command: bash -c "python /app/dashboard/main.py"
