@@ -1,6 +1,6 @@
 # Timeseries
 
-Python exercise
+This is an coding practice repository for a timeseries API using python, angular, mqtt and MongoDB.
 
 ![Tests](https://github.com/rcbop/python-timeseries/actions/workflows/ci.yaml/badge.svg)
 &nbsp;&nbsp;[![codecov](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graph/badge.svg?token=ijcD6RzE8L)](https://codecov.io/gh/rcbop/timeseries-visualization)&nbsp;&nbsp;[![CodeQL](https://github.com/rcbop/python-timeseries/workflows/CodeQL/badge.svg)](https://github.com/rcbop/python-timeseries/actions/workflows/github-code-scanning/codeql)&nbsp;&nbsp;[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries?ref=badge_shield)
@@ -45,22 +45,32 @@ will become mongo query:
 
 ## Preview
 
-Query result:
+### Default endpoint result:
 
-![query-result](./docs/query_result.png)
+Limits to 100 results:
 
-Angular Custom Dashboard:
+![query-result](./docs/query-result.png)
+
+### Angular Custom Dashboard:
 
 ![dashboard](./docs/dashboard.png)
 
-Plotly Dashboard:
+### Plotly Dashboard:
 
 ![plotly-dashboard](./docs/plotly-dash.png)
 
-## TODO
+### Filtering by query string example:
 
-check usage of [mongo engine ORM](http://mongoengine.org/) with timeseries collection
-
+![using-query-string-filters](./docs/using-query-string-filters.png)
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries?ref=badge_large)
+
+## TODO
+
+- check usage of [mongo engine ORM](http://mongoengine.org/) with timeseries collection
+- add UI tests (cypress)
+- API pagination offset
+- increase test coverage
+- instrumentation, tracing, metrics monitoring
+- terraform deployment
