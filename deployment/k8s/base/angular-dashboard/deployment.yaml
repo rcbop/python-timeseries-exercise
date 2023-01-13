@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: angular-dashboard
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        name: angular-dashboard
+    spec:
+      containers:
+        - image: angular-dashboard
+          name: angular-dashboard
+          ports:
+            - containerPort: 80
+          resources: {}
+      restartPolicy: Always
+status: {}

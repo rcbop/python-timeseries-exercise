@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        name: api
+    spec:
+      containers:
+        - env:
+            - name: MONGO_COLLECTION_NAME
+              value: sensor_data
+            - name: MONGO_DB_NAME
+              value: timeseries-visualization-test
+            - name: MONGO_URI
+              value: mongodb://ts-db:27017/
+          image: api
+          name: ts-api
+          ports:
+            - containerPort: 8000
+          resources: {}
+      restartPolicy: Always
+status: {}

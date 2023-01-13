@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: plotly-dashboard
+  name: plotly-dashboard
+spec:
+  ports:
+    - name: "8050"
+      port: 8050
+      targetPort: 8050
+  selector:
+    name: plotly-dashboard
+status:
+  loadBalancer: {}

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: ts-sensor-2
+  name: ts-sensor-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: ts-sensor-2
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        name: ts-sensor-2
+    spec:
+      containers:
+        - env:
+            - name: MQTT_HOST
+              value: mqtt-broker
+            - name: MQTT_PORT
+              value: "1883"
+            - name: SENSOR_AREA
+              value: KITCHEN
+            - name: SENSOR_TYPE
+              value: HUMIDITY
+          image: ts-sensor-2
+          name: ts-sensor-2
+          resources: {}
+      restartPolicy: Always
+status: {}

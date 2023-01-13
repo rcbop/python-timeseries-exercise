@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: plotly-dashboard
+  name: plotly-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: plotly-dashboard
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: plotly-dashboard
+    spec:
+      containers:
+        - args:
+            - bash
+            - -c
+            - python /app/dashboard/main.py
+          env:
+            - name: MONGO_COLLECTION_NAME
+              value: sensor_data
+            - name: MONGO_DB_NAME
+              value: timeseries-visualization-test
+            - name: MONGO_URI
+              value: mongodb://ts-db:27017/
+          image: plotly-dashboard
+          name: plotly-dashboard
+          ports:
+            - containerPort: 8050
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/dashboard
+              name: plotly-dashboard-claim0
+      restartPolicy: Always
+      volumes:
+        - name: plotly-dashboard-claim0
+          persistentVolumeClaim:
+            claimName: plotly-dashboard-claim0
+status: {}

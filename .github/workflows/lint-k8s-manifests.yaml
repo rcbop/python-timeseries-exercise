@@ -1,0 +1,59 @@
+---
+name: Lint K8s manifests
+on:
+  push:
+    paths:
+      - 'k8s/**'
+      - '.github/workflows/lint-k8s-manifests.yaml'
+  pull_request:
+    paths:
+      - 'k8s/**'
+      - '.github/workflows/lint-k8s-manifests.yaml'
+jobs:
+  kubeconform:
+    name: Kubeconform K8s manifests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+      - name: Install kubeconform
+        run: |
+          go install github.com/yannh/kubeconform/cmd/kubeconform@latest
+      - name: Run kubeconform
+        run: |
+          find deployment/k8s/dev -name 'kustomization.yaml' | xargs -I{} dirname {} | xargs -I{} kubectl kustomize {} | kubeconform -verbose
+
+  kube-linter:
+    name: KubeLint K8s manifests
+    runs-on: ubuntu-latest
+    if: needs.kubeconform.result == 'success'
+    needs: kubeconform
+    # kubeconform is faster than kube-linter, needs kubeconform to succeed
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create ../results directory for SARIF report files
+        run: mkdir -p ../results
+
+      - name: Scan repo with kube-linter
+        uses: stackrox/kube-linter-action@v1.0.4
+        id: kube-linter-action-scan
+        with:
+          directory: deployment/k8s
+          config: .github/kube-linter.yaml
+          format: sarif
+          output-file: ../results/kube-linter.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF report files to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+
+      - name: Verify kube-linter-action succeeded
+        shell: bash
+        run: |
+          echo "If this step fails, kube-linter found issues. Check the output of the scan step above."
+          [[ "${{ steps.kube-linter-action-scan.outcome }}" == "success" ]]

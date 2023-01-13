@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: mqtt-broker
+  name: mqtt-broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mqtt-broker
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        name: mqtt-broker
+    spec:
+      containers:
+        - image: mqtt-broker
+          name: mqtt-broker
+          ports:
+            - containerPort: 1883
+          resources: {}
+      restartPolicy: Always
+status: {}

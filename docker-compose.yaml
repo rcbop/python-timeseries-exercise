@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.3'
 
 x-mongoenv: &mongoenv
   MONGO_URI: mongodb://ts-db:27017/
@@ -29,8 +29,7 @@ services:
       context: data-consumer
       target: base
     environment:
-      <<: *mongoenv
-      <<: *mqttenv
+      <<: [*mongoenv, *mqttenv]
     depends_on:
       - mqtt-broker
   ts-sensor-1:
