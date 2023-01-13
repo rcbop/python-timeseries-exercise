@@ -2,20 +2,15 @@ import logging
 import os
 from logging import Logger
 
+from consumer.constants import (DEFAULT_COLLECTION_NAME, DEFAULT_DB_NAME,
+                                DEFAULT_MONGO_URI, DEFAULT_MQTT_HOST,
+                                DEFAULT_MQTT_PORT, DEFAULT_MQTT_TOPIC_PREFIX)
 from consumer.db import DBBootstrap, SensorDAO
 from consumer.model import DBConfig, MQTTConfig
 from kink import di
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.database import Database
-
-DEFAULT_MONGO_URI = "mongodb://localhost:27017/"
-DEFAULT_DB_NAME = "timeseries-visualization-test"
-DEFAULT_COLLECTION_NAME = "sensor_data"
-
-DEFAULT_MQTT_HOST = "localhost"
-DEFAULT_MQTT_PORT = 1883
-DEFAULT_MQTT_TOPIC_PREFIX = "sensors/"
 
 
 def get_logger() -> Logger:

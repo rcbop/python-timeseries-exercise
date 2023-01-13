@@ -1,9 +1,9 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from api.bootstrap import (DEFAULT_MONGO_DB_NAME,
-                           DEFAULT_MONGO_TS_COLLECTION_NAME, DEFAULT_MONGO_URI,
-                           EnvConfig, bootstrap_di, get_env_config)
+from api.bootstrap import EnvConfig, bootstrap_di, get_env_config
+from api.constants import (DEFAULT_MONGO_DB_NAME,
+                           DEFAULT_MONGO_TS_COLLECTION_NAME, DEFAULT_MONGO_URI)
 
 
 @pytest.fixture

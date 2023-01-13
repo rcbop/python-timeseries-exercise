@@ -4,13 +4,11 @@ import os
 from dataclasses import dataclass
 from logging import Logger
 
+from api.constants import (DEFAULT_MONGO_DB_NAME,
+                           DEFAULT_MONGO_TS_COLLECTION_NAME, DEFAULT_MONGO_URI)
 from kink import di
 from pymongo import MongoClient
 from pymongo.database import Database
-
-DEFAULT_MONGO_URI = "mongodb://localhost:27017"
-DEFAULT_MONGO_DB_NAME = "timeseries-visualization-test"
-DEFAULT_MONGO_TS_COLLECTION_NAME = "sensor_data"
 
 
 @dataclass

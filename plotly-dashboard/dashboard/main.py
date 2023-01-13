@@ -11,6 +11,9 @@ from pandas.io.json import json_normalize
 from pymongo.collection import Collection
 
 INTERVAL_MILLISECONDS = 5000
+DEFAULT_MONGO_URI = "mongodb://localhost:27017/"
+DEFAULT_MONGO_DB_NAME = "timeseries-visualization-test"
+DEFAULT_COLLECTION_NAME = "sensor_data"
 
 
 @dataclass
@@ -97,32 +100,30 @@ def get_app_layout(all_tabs: list[dcc.Tab]) -> html.Div:
     ])
 
 
-def main():
-    DEFAULT_MONGO_URI = "mongodb://localhost:27017/"
-    DEFAULT_MONGO_DB_NAME = "timeseries-visualization-test"
-    DEFAULT_COLLECTION_NAME = "sensor_data"
-
+def get_mongo_db_config() -> DBConfig:
     mongo_uri = os.getenv("MONGO_URI", DEFAULT_MONGO_URI)
     db_name = os.getenv("MONGO_DB_NAME", DEFAULT_MONGO_DB_NAME)
     collection_name = os.getenv(
         "MONGO_COLLECTION_NAME", DEFAULT_COLLECTION_NAME)
+    return DBConfig(mongo_uri, db_name, collection_name)
 
-    collection = get_collection(DBConfig(mongo_uri, db_name, collection_name))
 
-    df = get_latest_data_frame(collection)
+def get_page_1_layout(df: pd.DataFrame) -> html.Div:
+    """Returns the layout of page 1."""
     line_fig = get_line_fig(df)
-    pie_fig = get_pie_fig(df)
-    page_1_layout = get_page_layout(
-        "line-plot", "Sensor Data Over Time", line_fig)
-    page_2_layout = get_page_layout(
-        "pie-chart", "Sensor Area Distribution", pie_fig)
+    return get_page_layout("line-plot", "Sensor Data Over Time", line_fig)
 
+
+def get_page_2_layout(df: pd.DataFrame) -> html.Div:
+    """Returns the layout of page 2."""
+    pie_fig = get_pie_fig(df)
+    return get_page_layout("pie-chart", "Sensor Area Distribution", pie_fig)
+
+
+def setup_dash_app(tabs: list[dcc.Tab], collection: Collection) -> Dash:
     app = Dash()
 
-    app.layout = get_app_layout(all_tabs=[
-        dcc.Tab(label="Page 1", value="page_1", children=page_1_layout),
-        dcc.Tab(label="Page 2", value="page_2", children=page_2_layout),
-    ])
+    app.layout = get_app_layout(all_tabs=tabs)
 
     # Callback function to update the plot data
     @app.callback(
@@ -141,6 +142,20 @@ def main():
     def update_pie_chart(n_intervals):
         df = get_latest_data_frame(collection)
         return get_pie_fig(df)
+    return app
+
+
+def main():
+    collection = get_collection(get_mongo_db_config())
+
+    df = get_latest_data_frame(collection)
+    page_1_layout = get_page_1_layout(df)
+    page_2_layout = get_page_2_layout(df)
+
+    app = setup_dash_app(tabs=[
+        dcc.Tab(label="Page 1", value="page_1", children=page_1_layout),
+        dcc.Tab(label="Page 2", value="page_2", children=page_2_layout),
+    ], collection=collection)
 
     app.run(host="0.0.0.0", port=8050, debug=True)
 

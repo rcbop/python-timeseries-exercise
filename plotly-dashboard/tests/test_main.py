@@ -6,7 +6,9 @@ from dash import html
 from dashboard.main import (DBConfig, calculate_percentage_distribution,
                             get_app_layout, get_collection,
                             get_latest_data_frame, get_line_fig,
-                            get_page_layout, get_pie_fig, get_pie_graph, main)
+                            get_mongo_db_config, get_page_1_layout,
+                            get_page_2_layout, get_page_layout, get_pie_fig,
+                            get_pie_graph, main)
 
 mocked_result_set = [
     {
@@ -134,3 +136,54 @@ def test_get_pie_fig():
     fig = get_pie_fig(df)
     assert isinstance(fig, go.Figure)
     assert fig.data[0].type == 'pie'
+
+
+def test_get_mongo_db_config():
+    with patch('dashboard.main.os.getenv') as mocked_getenv:
+        mocked_getenv.side_effect = [
+            'mongodb://unit:27017',
+            'testunit',
+            'wow'
+        ]
+        db_config = get_mongo_db_config()
+        assert db_config.mongo_uri == 'mongodb://unit:27017'
+        assert db_config.db_name == 'testunit'
+        assert db_config.collection_name == 'wow'
+
+
+def test_get_page_1_layout():
+    fixture_df = pd.DataFrame(expected_flattened_result_set)
+    layout = get_page_1_layout(fixture_df)
+    assert isinstance(layout, html.Div)
+
+
+def test_get_page_2_layout():
+    fixture_df = pd.DataFrame(expected_flattened_result_set)
+    layout = get_page_2_layout(fixture_df)
+    assert isinstance(layout, html.Div)
+
+
+@patch('dashboard.main.get_mongo_db_config')
+@patch('dashboard.main.get_collection')
+@patch('dashboard.main.get_latest_data_frame')
+@patch('dashboard.main.get_page_1_layout')
+@patch('dashboard.main.get_page_2_layout')
+@patch('dashboard.main.setup_dash_app')
+def test_main(mocked_setup_dash_app, mocked_get_page_2_layout, mocked_get_page_1_layout,
+              mocked_get_latest_data_frame, mocked_get_collection, mocked_get_mongo_db_config):
+    mocked_get_mongo_db_config.return_value = MagicMock()
+    mocked_get_collection.return_value = MagicMock()
+    mocked_get_latest_data_frame.return_value = MagicMock()
+    mocked_get_page_1_layout.return_value = MagicMock()
+    mocked_get_page_2_layout.return_value = MagicMock()
+    app_mock = MagicMock()
+    app_mock.run = Mock()
+    mocked_setup_dash_app.return_value = app_mock
+    main()
+    mocked_get_mongo_db_config.assert_called_once()
+    mocked_get_collection.assert_called_once()
+    mocked_get_latest_data_frame.assert_called_once()
+    mocked_get_page_1_layout.assert_called_once()
+    mocked_get_page_2_layout.assert_called_once()
+    mocked_setup_dash_app.assert_called_once()
+    app_mock.run.assert_called_once_with(host='0.0.0.0', port=8050, debug=True)

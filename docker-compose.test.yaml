@@ -1,30 +1,30 @@
-version: '3.3'
+version: '3.2'
 
 services:
   data-consumer:
-    container_name: data-consumer
+    container_name: test-data-consumer
     build:
       context: data-consumer
       target: test
   ts-sensor:
-    container_name: ts-sensor
+    container_name: test-ts-sensor
     build:
       context: data-sensor
       target: test
   api:
-    container_name: ts-api
+    container_name: test-ts-api
     build:
       context: data-api
       target: test
   angular-dashboard:
-    container_name: angular-dashboard
+    container_name: test-angular-dashboard
     privileged: true
     build:
       context: angular-dashboard
       target: test
     command: npm run ci
   plotly-dashboard:
-    container_name: plotly-dashboard
+    container_name: test-plotly-dashboard
     build:
       context: plotly-dashboard
       target: test
