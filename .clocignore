@@ -1,0 +1,16 @@
+node_modules
+__pycache__
+.coverage
+.mypy_cache
+.pytest_cache
+.python-version
+.venv
+*.egg-info
+coverage.xml
+test-results.xml
+node_modules
+*-test-results.xml
+coverage
+reports
+.vscode
+package-lock.json
