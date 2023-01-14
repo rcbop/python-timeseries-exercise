@@ -5,6 +5,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, concat, interval, map, of, switchMap } from 'rxjs';
 import { RawTemperatureDataPoint, TemperatureDataPoint } from './model';
 
+const FETCH_INTERVAL = 10000;
+const FETCH_LIMIT = 500;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -54,7 +57,7 @@ export class TemperatureService {
       params = params.set('timestamp[lte]', endTimestamp.toISOString());
     }
     if (!startTimestamp && !endTimestamp) {
-      params = params.set('limit', '100');
+      params = params.set('limit', FETCH_LIMIT);
     }
     return of(null).pipe(
       switchMap(() => this.http.get<RawTemperatureDataPoint[]>(`${this.baseUrl}/sensors/`, { params }))
@@ -67,7 +70,7 @@ export class TemperatureService {
    *
    * @returns Observable<TemperatureDataPoint[]>
    */
-  getParsedDataWithUpdatingInterval(startTimestamp?: Date, endTimestamp?: Date, fetchInterval: number = 5000): Observable<TemperatureDataPoint[]> {
+  getParsedDataWithUpdatingInterval(startTimestamp?: Date, endTimestamp?: Date, fetchInterval: number = FETCH_INTERVAL): Observable<TemperatureDataPoint[]> {
     return concat(
       this.getData(startTimestamp, endTimestamp),
       interval(fetchInterval).
@@ -99,7 +102,7 @@ export class TemperatureService {
    *  ]
    * }
    * */
-  getParsedDataWithUpdatingIntervalGroupedBySensor(startTimestamp?: Date, endTimestamp?: Date, fetchInterval: number = 5000): Observable<{ [key: string]: TemperatureDataPoint[] }> {
+  getParsedDataWithUpdatingIntervalGroupedBySensor(startTimestamp?: Date, endTimestamp?: Date, fetchInterval: number = FETCH_INTERVAL): Observable<{ [key: string]: TemperatureDataPoint[] }> {
     return this.getParsedDataWithUpdatingInterval(startTimestamp, endTimestamp, fetchInterval).pipe(
       map((data) => {
         const result: { [key: string]: TemperatureDataPoint[] } = {};

@@ -23,9 +23,6 @@ noData(Highcharts);
 export class TimeseriesGraphComponent implements OnInit {
   Highcharts = Highcharts;
 
-  startDate?: Date;
-  endDate?: Date;
-
   chart: any;
   allSeriesData: { [key: string]: TemperatureDataPoint[] } = {};
 
@@ -96,13 +93,6 @@ export class TimeseriesGraphComponent implements OnInit {
     this.updateChart();
   }
 
-  onDatePickerUpdateEvent(event: { startDate: Date, endDate: Date }) {
-    console.log('Received update event:', event);
-    this.startDate = event.startDate;
-    this.endDate = event.endDate;
-    this.updateChart();
-  }
-
   updateDataDictionary(data: { [key: string]: TemperatureDataPoint[] }): void {
     while(this.chart.series.length > 0)
       this.chart.series[0].remove(true);
@@ -117,8 +107,14 @@ export class TimeseriesGraphComponent implements OnInit {
     this.allSeriesData = data;
   }
 
+  updateChartWithDateRange(startDate?: Date, endDate?: Date) {
+    this.timeseriesAPIService.getParsedDataWithUpdatingIntervalGroupedBySensor(startDate, endDate).subscribe((data) => {
+      this.updateDataDictionary(data);
+    });
+  }
+
   updateChart() {
-    this.timeseriesAPIService.getParsedDataWithUpdatingIntervalGroupedBySensor(this.startDate, this.endDate).subscribe((data) => {
+    this.timeseriesAPIService.getParsedDataWithUpdatingIntervalGroupedBySensor().subscribe((data) => {
       this.updateDataDictionary(data);
     });
   }

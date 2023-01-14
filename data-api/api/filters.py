@@ -1,5 +1,5 @@
 import re
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, unquote
 
 from pyparsing import Literal, Or, ParserElement, Word, ZeroOrMore, alphanums
 from pyparsing.exceptions import ParseException
@@ -70,7 +70,7 @@ class QueryFilters:
             dict[str, dict[str, str]]: The parsed query string.
         """
         try:
-            self.__validation_grammar.validate(raw_query)
+            self.__validation_grammar.validate(unquote(raw_query))
         except ParseException as err:
             raise InvalidQueryError(
                 f'Invalid query string: {raw_query}') from err

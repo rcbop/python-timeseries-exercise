@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pymongo
 import pytest
 from api.sensors.models import SensorData
-from api.sensors.service import NoResultsFound, TemperatureService
+from api.sensors.service import NoResultsFound, SensorService
 from bson import ObjectId
 
 
@@ -48,7 +48,7 @@ def prepare_mongo_query_builder_mock(expected_query: dict) -> Mock:
         None
     ),
     (
-        {"limit": 2, "area": "kitchen"},
+        {"limit": 2, "metadata.area": "kitchen"},
         100,
         0,
         {"metadata.area": "kitchen"},
@@ -75,7 +75,7 @@ def prepare_mongo_query_builder_mock(expected_query: dict) -> Mock:
         None
     ),
     (
-        {"limit": 2, "area": "kitchen"},
+        {"limit": 2, "metadata.area": "kitchen"},
         2,
         0,
         {"metadata.area": "kitchen"},
@@ -113,7 +113,7 @@ def test_sensor_service_get_sensor_data(filters: dict,
     """Test the get_temperatures method."""
     mocked_collection = prepare_collection_mock(expected_result_set)
     mocked_mongo_query_builder = prepare_mongo_query_builder_mock(mongo_query)
-    temperature_service = TemperatureService(
+    temperature_service = SensorService(
         mocked_collection, mocked_mongo_query_builder)
     if exception:
         with pytest.raises(exception):

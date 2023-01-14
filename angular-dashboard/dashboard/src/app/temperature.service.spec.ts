@@ -54,7 +54,7 @@ describe('TemperatureService', () => {
       expect(data).toEqual(mockTemperatureData);
     });
 
-    const req = httpMock.expectOne(`${service.baseUrl}/sensors/?limit=100`);
+    const req = httpMock.expectOne(`${service.baseUrl}/sensors/?limit=500`);
     expect(req.request.method).toEqual('GET');
     req.flush(mockTemperatureData);
   });
@@ -132,7 +132,7 @@ describe('TemperatureService', () => {
       expect(data).toEqual(mockParsedTemperatureData);
     });
 
-    const req = httpMock.expectOne(`${service.baseUrl}/sensors/?limit=100`);
+    const req = httpMock.expectOne(`${service.baseUrl}/sensors/?limit=500`);
     expect(req.request.method).toEqual('GET');
     req.flush(mockTemperatureData);
   });
@@ -189,7 +189,7 @@ describe('TemperatureService', () => {
       expect(data).toEqual(mockParsedTemperatureData);
     });
 
-    const req = httpMock.expectOne(`${service.baseUrl}/sensors/?limit=100`);
+    const req = httpMock.expectOne(`${service.baseUrl}/sensors/?limit=500`);
     expect(req.request.method).toEqual('GET');
     req.flush(mockTemperatureData);
   });

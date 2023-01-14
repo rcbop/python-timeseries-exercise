@@ -3,8 +3,7 @@
     <h1 class="main-title">{{ title }}</h1>
   </div>
   <div>
-    <!-- <app-datepicker></app-datepicker> -->
-    <!-- <app-timeseries-graph #timeseriesGraph (updateChartEvent)="timeseriesGraph.onDatePickerUpdateEvent($event)"></app-timeseries-graph> -->
+    <app-datepicker (updateChartEvent)="timeseriesGraph.updateChartWithDateRange($event.startDate, $event.endDate)"></app-datepicker>
     <app-timeseries-graph #timeseriesGraph></app-timeseries-graph>
   </div>
 </div>

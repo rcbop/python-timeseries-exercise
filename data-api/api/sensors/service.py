@@ -1,4 +1,5 @@
 """Service layer for the API."""
+from logging import Logger
 from typing import Protocol
 
 import pymongo
@@ -18,12 +19,14 @@ class ISensorService(Protocol):
 
 
 @inject(alias=ISensorService)
-class TemperatureService:
-    def __init__(self, sensors_collection: Collection, mongo_query_filter: MongoQueryFilter = MongoQueryFilter()):
+class SensorService:
+    def __init__(self, sensors_collection: Collection, logger: Logger, mongo_query_filter: MongoQueryFilter = MongoQueryFilter()):
         self.__sensors_collection = sensors_collection
         self.__mongo_query_filter = mongo_query_filter
+        self.__logger = logger
 
     def _run_query(self, mongo_query: dict, limit: int, offset: int) -> list[SensorData]:
+        self.__logger.info("Service Running query: %s", mongo_query)
         cursor = self.__sensors_collection.find(mongo_query).limit(
             limit).sort("timestamp", pymongo.DESCENDING).skip(offset)
         return [SensorData(**doc) for doc in cursor]

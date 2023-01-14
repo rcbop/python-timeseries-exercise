@@ -1,8 +1,8 @@
 import re
 from datetime import datetime
-from decimal import Decimal
 
 from api.constants import ISO_TIMESTAMP_REGEX, MONGO_OPERATOR_SYMBOLS
+from dateutil import parser
 
 
 class InvalidMongoQueryFilterError(ValueError):
@@ -75,5 +75,6 @@ class MongoQueryFilter():
             if isinstance(value, dict):
                 mongo_query[key] = self.convert_isotimestamp_to_datetime(value)
             elif isinstance(value, str) and re.match(self.__iso_timestamp_regex, value):
-                mongo_query[key] = datetime.fromisoformat(value)
+                mongo_query[key] = parser.parse(value)
+
         return mongo_query

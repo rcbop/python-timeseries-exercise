@@ -1,19 +1,34 @@
 import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormField, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { DatepickerComponent } from './datepicker/datepicker.component';
 import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.component';
+
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        MatDatepickerModule,
+        MatNativeDateModule,
         RouterTestingModule,
-        HttpClientModule
+        HttpClientModule,
+        MatFormFieldModule,
+        NoopAnimationsModule,
+        FormsModule
       ],
       declarations: [
+        DatepickerComponent,
         TimeseriesGraphComponent,
-        AppComponent
+        AppComponent,
+        MatLabel,
+        MatFormField
       ],
     }).compileComponents();
   });

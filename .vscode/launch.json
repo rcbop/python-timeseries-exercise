@@ -3,6 +3,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: Module",
+      "type": "python",
+      "request": "launch",
+      "args": [
+        "-vv",
+        "--no-cov",
+        "${workspaceFolder}/data-api/tests/test_service.py"
+      ],
+      "module": "pytest",
+      "justMyCode": true
+    },
+    {
       "name": "Python: Current File",
       "type": "python",
       "request": "launch",
@@ -20,14 +32,6 @@
       "sourceMapPathOverrides": {
         "webpack:///src/*": "${webRoot}/*"
       }
-    },
-    {
-      "name": "ng serve",
-      "type": "chrome",
-      "request": "launch",
-      "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/",
-      "webRoot": "${workspaceRoot}/angular-dashboard/dashboard/src",
     },
     {
       "name": "ng test",
