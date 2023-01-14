@@ -8,6 +8,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DatepickerComponent } from './datepicker/datepicker.component';
@@ -23,6 +24,7 @@ import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.co
   ],
   imports: [
     BrowserModule,
+    NgxMaterialTimepickerModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
@@ -36,6 +38,7 @@ import { TimeseriesGraphComponent } from './timeseries-graph/timeseries-graph.co
   providers: [
     TemperatureService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [MatFormFieldModule, MatInputModule]
 })
 export class AppModule { }

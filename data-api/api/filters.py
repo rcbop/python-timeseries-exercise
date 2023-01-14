@@ -63,8 +63,6 @@ class QueryFilters:
 
         Raises:
             InvalidQueryError: If the query string is invalid.
-            InvalidQueryFieldError: If the query string contains an invalid field.
-            InvalidQueryOperatorError: If the query string contains an invalid operator.
 
         Returns:
             dict[str, dict[str, str]]: The parsed query string.
@@ -76,7 +74,6 @@ class QueryFilters:
                 f'Invalid query string: {raw_query}') from err
 
         filters = self.parse_query_string_into_filters(raw_query)
-        filters = self._cleanup_query_empty_values(filters)
         return filters
 
     def parse_query_string_into_filters(self, raw_query: str) -> dict[str, dict[str, str]]:
@@ -126,23 +123,3 @@ class QueryFilters:
                 # If no value or subkey was matched, add the key-value pair to the dictionary
                 filter[key] = value[0]
         return filter
-
-    def _cleanup_query_empty_values(self, query: dict) -> dict:
-        """Traverse dictionary recursiverly and clean empty fields and operators.
-        e.g:
-
-        { "timestamp": { "gte": "", "lte": "2021-01-05T00:00:00" }
-
-        should be cleaned up to:
-
-        { "timestamp": { "lte": "2021-01-05T00:00:00" }
-
-        Args:
-            query (dict): The query dictionary to clean up.
-
-        Returns:
-            dict: The cleaned up query dictionary.
-        """
-        if not isinstance(query, dict):
-            return query
-        return {k: self._cleanup_query_empty_values(v) for k, v in query.items() if v}

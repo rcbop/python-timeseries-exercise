@@ -1,9 +1,21 @@
-<mat-form-field>
-  <mat-label>Choose Date Range</mat-label>
-  <mat-date-range-input [rangePicker]="myRangePicker">
-    <input [(ngModel)]="startDate" matStartDate placeholder="Start date" (ngModelChange)="updateChart();">
-    <input [(ngModel)]="endDate" matEndDate placeholder="End date" (ngModelChange)="updateChart();">
-  </mat-date-range-input>
-  <mat-datepicker-toggle matSuffix [for]="myRangePicker"></mat-datepicker-toggle>
-  <mat-date-range-picker #myRangePicker></mat-date-range-picker>
-</mat-form-field>
+<div class="date-time-container">
+  <mat-form-field>
+    <mat-date-range-input class="date-time-inputs"  [rangePicker]="myRangePicker">
+      <input [(ngModel)]="startDate" matStartDate placeholder="Start date"/>
+      <input [(ngModel)]="endDate" matEndDate placeholder="End date"/>
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="myRangePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #myRangePicker></mat-date-range-picker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Start Time</mat-label>
+    <input class="date-time-inputs" matInput [ngxTimepicker]="startTime" [(ngModel)]="startTimeValue"/>
+    <ngx-material-timepicker #startTime></ngx-material-timepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>End Time</mat-label>
+    <input name="end-time" class="date-time-inputs" matInput [ngxTimepicker]="endTime" [(ngModel)]="endTimeValue"/>
+    <ngx-material-timepicker #endTime></ngx-material-timepicker>
+  </mat-form-field>
+  <button (click)="onSelect()">Select</button>
+</div>
