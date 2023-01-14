@@ -28,11 +28,17 @@ spec:
               value: timeseries-visualization-test
             - name: MONGO_URI
               value: mongodb://ts-db:27017/
-          image: plotly-dashboard
+          image: <PLOTLY_DASH_IMAGE_NAME>
           name: plotly-dashboard
           ports:
             - containerPort: 8050
-          resources: {}
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
           volumeMounts:
             - mountPath: /app/dashboard
               name: plotly-dashboard-claim0

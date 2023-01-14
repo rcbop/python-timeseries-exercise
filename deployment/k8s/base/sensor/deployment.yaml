@@ -2,18 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    name: ts-sensor-2
-  name: ts-sensor-2
+    name: ts-sensor-1
+  name: ts-sensor-1
 spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
   replicas: 1
   selector:
     matchLabels:
-      name: ts-sensor-2
+      name: ts-sensor-1
   strategy: {}
   template:
     metadata:
       labels:
-        name: ts-sensor-2
+        name: ts-sensor-1
     spec:
       containers:
         - env:
@@ -24,9 +28,15 @@ spec:
             - name: SENSOR_AREA
               value: KITCHEN
             - name: SENSOR_TYPE
-              value: HUMIDITY
-          image: ts-sensor-2
-          name: ts-sensor-2
-          resources: {}
+              value: TEMPERATURE
+          image: ts-sensor-1
+          name: ts-sensor-1
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
       restartPolicy: Always
 status: {}

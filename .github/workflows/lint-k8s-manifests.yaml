@@ -3,12 +3,13 @@ name: Lint K8s manifests
 on:
   push:
     paths:
-      - 'k8s/**'
+      - 'deployment/k8s/**'
       - '.github/workflows/lint-k8s-manifests.yaml'
   pull_request:
     paths:
-      - 'k8s/**'
+      - 'deployment/k8s/**'
       - '.github/workflows/lint-k8s-manifests.yaml'
+  workflow_dispatch:
 jobs:
   kubeconform:
     name: Kubeconform K8s manifests

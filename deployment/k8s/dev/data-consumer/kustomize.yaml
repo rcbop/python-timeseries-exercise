@@ -5,3 +5,7 @@ bases:
   - ../../base/data-consumer/
 
 namePrefix: dev-
+images:
+- name: <DATA_CONSUMER_IMAGE_NAME>
+  newName: my.image.registry/data-consumer
+  newTag: dev

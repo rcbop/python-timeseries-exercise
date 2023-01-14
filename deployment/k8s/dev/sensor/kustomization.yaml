@@ -5,3 +5,7 @@ bases:
   - ../../base/sensor
 
 namePrefix: dev-
+images:
+- name: <SENSOR_IMAGE_NAME>
+  newName: my.image.registry/sensor
+  newTag: dev

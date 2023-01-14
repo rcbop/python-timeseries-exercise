@@ -5,3 +5,7 @@ bases:
   - ../../base/plotly-dash/
 
 namePrefix: dev-
+images:
+- name: <PLOTLY_DASH_IMAGE_NAME>
+  newName: my.image.registry/plotly-dash
+  newTag: dev

@@ -5,3 +5,7 @@ bases:
   - ../../base/api/
 
 namePrefix: dev-
+images:
+- name: <API_IMAGE_NAME>
+  newName: my.image.registry/api
+  newTag: dev

@@ -5,6 +5,10 @@ metadata:
     name: data-consumer
   name: data-consumer
 spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
   replicas: 1
   selector:
     matchLabels:
@@ -27,8 +31,14 @@ spec:
               value: mqtt-broker
             - name: MQTT_PORT
               value: "1883"
-          image: data-consumer
+          image: <DATA_CONSUMER_IMAGE_NAME>
           name: data-consumer
-          resources: {}
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
       restartPolicy: Always
 status: {}

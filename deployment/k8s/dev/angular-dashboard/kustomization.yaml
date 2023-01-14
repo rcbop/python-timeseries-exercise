@@ -5,3 +5,7 @@ bases:
   - ../../base/angular-dashboard/
 
 namePrefix: dev-
+images:
+- name: <ANGULAR_DASHBOARD_IMAGE_NAME>
+  newName: my.image.registry/angular-dashboard
+  newTag: dev

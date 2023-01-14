@@ -19,6 +19,13 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: mongodb
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
       volumes:
         - name: mongodb
           persistentVolumeClaim:

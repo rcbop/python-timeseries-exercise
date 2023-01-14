@@ -5,3 +5,7 @@ bases:
   - ../../base/mqtt-broker/
 
 namePrefix: dev-
+images:
+- name: <MQTT_BROKER_IMAGE_NAME>
+  newName: my.image.registry/mqtt-broker
+  newTag: dev

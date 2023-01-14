@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: api
 spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
   replicas: 1
   selector:
     matchLabels:
@@ -21,10 +25,16 @@ spec:
               value: timeseries-visualization-test
             - name: MONGO_URI
               value: mongodb://ts-db:27017/
-          image: api
+          image: <API_IMAGE_NAME>
           name: ts-api
           ports:
             - containerPort: 8000
-          resources: {}
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
       restartPolicy: Always
 status: {}

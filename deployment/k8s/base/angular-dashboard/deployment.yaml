@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: angular-dashboard
 spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
   replicas: 1
   selector:
     matchLabels:
@@ -14,10 +18,16 @@ spec:
         name: angular-dashboard
     spec:
       containers:
-        - image: angular-dashboard
+        - image: <ANGULAR_DASHBOARD_IMAGE_NAME>
           name: angular-dashboard
           ports:
             - containerPort: 80
-          resources: {}
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
       restartPolicy: Always
 status: {}

@@ -16,10 +16,16 @@ spec:
         name: mqtt-broker
     spec:
       containers:
-        - image: mqtt-broker
+        - image: <MQTT_BROKER_IMAGE_NAME>
           name: mqtt-broker
           ports:
             - containerPort: 1883
-          resources: {}
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
       restartPolicy: Always
 status: {}
