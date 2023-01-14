@@ -1,3 +1,5 @@
+import logging
+from logging import Logger
 from unittest.mock import Mock
 
 import pytest
@@ -58,6 +60,7 @@ def client() -> TestClient:
     from api.sensors.routes import router
     app = FastAPI()
     app.include_router(router)
+    di[Logger] = logging.getLogger("test")
     return TestClient(app)
 
 
@@ -82,7 +85,7 @@ def test_get_sensor_data(client: TestClient):
     temperature_service.get_sensor_data.assert_called()
 
 
-def test_get_sensor_data_with_limit(client: TestClient):
+def test_get_sensor_data_with_limit_invalid_operator(client: TestClient):
     """Test the get_sensor_data route with a limit."""
     temperature_service = Mock()
     temperature_service.get_sensor_data = Mock(
@@ -90,17 +93,9 @@ def test_get_sensor_data_with_limit(client: TestClient):
     di[ISensorService] = temperature_service
 
     response = client.get("/?limit[eq]=1")
-    assert response.status_code == 200
+    assert response.status_code == 400
     assert "content-type" in response.headers
     assert response.headers["content-type"] == "application/json"
-    got_response = response.json()
-    assert len(got_response) == 1
-    assert got_response[0]["_id"] == str(sensor_data_list[0].id)
-    assert got_response[0]["timestamp"] == sensor_data_list[0].timestamp.isoformat(
-    )
-    assert got_response[0]["value"] == sensor_data_list[0].value
-    assert got_response[0]["metadata"] == sensor_data_list[0].metadata
-    temperature_service.get_sensor_data.assert_called_once()
 
 
 def test_get_sensor_data_timestamp_between_period(client: TestClient):

@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pymongo
 import pytest
 from api.sensors.models import SensorData
-from api.sensors.service import TemperatureService
+from api.sensors.service import NoResultsFound, TemperatureService
 from bson import ObjectId
 
 
@@ -12,8 +12,11 @@ def prepare_collection_mock(expected_resultset: list[dict]) -> Mock:
     mock_cursor = Mock()
     mock_cursor_with_limit = Mock()
     mock_cursor.limit = Mock(return_value=mock_cursor_with_limit)
-    mock_cursor_with_limit.sort = Mock(return_value=expected_resultset)
+    mock_cursor_with_limit_skip = Mock()
+    mock_cursor_with_limit.sort = Mock(
+        return_value=mock_cursor_with_limit_skip)
     temp_collection_mock.find = Mock(return_value=mock_cursor)
+    mock_cursor_with_limit_skip.skip = Mock(return_value=expected_resultset)
     return temp_collection_mock
 
 
@@ -24,10 +27,11 @@ def prepare_mongo_query_builder_mock(expected_query: dict) -> Mock:
     return mongo_query_builder_mock
 
 
-@pytest.mark.parametrize("filters,limit,mongo_query,expected_result_set", [
+@pytest.mark.parametrize("filters,limit,offset,mongo_query,expected_result_set,exception", [
     (
         None,
         100,
+        0,
         {},
         [
             {
@@ -40,11 +44,21 @@ def prepare_mongo_query_builder_mock(expected_query: dict) -> Mock:
                     "uuid": "1234"
                 }
             }
-        ]
+        ],
+        None
+    ),
+    (
+        {"limit": 2, "area": "kitchen"},
+        100,
+        0,
+        {"metadata.area": "kitchen"},
+        [],
+        NoResultsFound
     ),
     (
         {"limit": 1},
         1,
+        0,
         {},
         [
             {
@@ -57,11 +71,13 @@ def prepare_mongo_query_builder_mock(expected_query: dict) -> Mock:
                     "uuid": "1234"
                 }
             }
-        ]
+        ],
+        None
     ),
     (
         {"limit": 2, "area": "kitchen"},
         2,
+        0,
         {"metadata.area": "kitchen"},
         [
             {
@@ -84,21 +100,31 @@ def prepare_mongo_query_builder_mock(expected_query: dict) -> Mock:
                     "uuid": "1234"
                 }
             }
-        ]
+        ],
+        None
     )
 ])
 def test_sensor_service_get_sensor_data(filters: dict,
                                         limit: int,
+                                        offset: int,
                                         mongo_query: dict,
-                                        expected_result_set: list[dict]):
+                                        expected_result_set: list[dict],
+                                        exception: Exception):
     """Test the get_temperatures method."""
     mocked_collection = prepare_collection_mock(expected_result_set)
     mocked_mongo_query_builder = prepare_mongo_query_builder_mock(mongo_query)
     temperature_service = TemperatureService(
         mocked_collection, mocked_mongo_query_builder)
+    if exception:
+        with pytest.raises(exception):
+            temperature_service.get_sensor_data(filters)
+        return
+
     got_result_set = temperature_service.get_sensor_data(filters)
     mocked_collection.find.assert_called_once_with(mongo_query)
     mocked_collection.find.return_value.limit.assert_called_once_with(limit)
     mocked_collection.find.return_value.limit.return_value.sort.assert_called_once_with("timestamp",
                                                                                         pymongo.DESCENDING)
+    mocked_collection.find.return_value.limit.return_value.sort.return_value.skip.assert_called_once_with(
+        offset)
     assert got_result_set == [SensorData(**doc) for doc in expected_result_set]

@@ -1,16 +1,5 @@
 import pytest
-from api.filters import (InvalidFieldError, InvalidOperatorError,
-                         InvalidQueryError, QueryFilters)
-
-valid_fields = [
-    "timestamp",
-    "metadata",
-    "metadata.area",
-    "metadata.type",
-    "metadata.uuid",
-    "value",
-    "limit",
-]
+from api.filters import InvalidQueryError, QueryFilters
 
 
 @pytest.mark.parametrize("test_case,raw_query, expected", [
@@ -24,16 +13,6 @@ valid_fields = [
             },
             "limit": "2",
             "metadata.area": "kitchen"
-        }
-    ),
-    (
-        "empty values >>>",
-        "timestamp[gte]=2022-12-28T21:29:37.448000&limit=2&metadata.area=",
-        {
-            "timestamp": {
-                "gte": "2022-12-28T21:29:37.448000",
-            },
-            "limit": "2"
         }
     ),
     (
@@ -56,30 +35,34 @@ valid_fields = [
             }
         }
     ),
-    (
-        "multiple empty values >>>",
-        "timestamp[gte]=&limit=2&timestamp[lt]=2022-12-31T21:29:37&metadata.area=&metadata.area=",
-        {
-            "limit": "2",
-            "timestamp": {
-                "lt": "2022-12-31T21:29:37",
-            }
-        }
-    )
 ])
 def test_parse(test_case: str, raw_query: str, expected: dict[str, dict[str, str]]):
     """Test the parse_query_string function."""
     print(f"Test case: {test_case}")
-    result = QueryFilters(
-        valid_fields=valid_fields).parse_and_validate(raw_query)
+    result = QueryFilters().parse_and_validate(raw_query)
     assert result == expected
 
 
 @ pytest.mark.parametrize("test_case,raw_query,error_raised", [
     (
+        "good query >>>",
+        "timestamp[gte]=2022-12-28T21:29:37.448000&limit=2&metadata.area=kitchen",
+        None
+    ),
+    (
+        "good query 2 >>>",
+        "limit=2&metadata.area=kitchen",
+        None
+    ),
+    (
+        "good query 3 >>>",
+        "metadata.area=kitchen",
+        None
+    ),
+    (
         "invalid field >>>",
         "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=kitchen&invalid_field=invalid_value",
-        InvalidFieldError
+        InvalidQueryError
     ),
     (
         "invalid operator >>>",
@@ -87,9 +70,9 @@ def test_parse(test_case: str, raw_query: str, expected: dict[str, dict[str, str
         InvalidQueryError
     ),
     (
-        "missing value ignored >>>",
+        "missing value >>>",
         "timestamp[gte]=2022-12-28T21:29:37.448000&timestamp[lte]=2022-12-28T20:35:41.410000&limit=2&metadata.area=",
-        None
+        InvalidQueryError
     ),
     (
         "invalid query - unbalanced brackets >>>",
@@ -100,7 +83,7 @@ def test_parse(test_case: str, raw_query: str, expected: dict[str, dict[str, str
 def test_validate(test_case: str, raw_query: str, error_raised: Exception | None):
     """Test the validate_query_string function."""
     print(f"Test case: {test_case}")
-    query_filters = QueryFilters(valid_fields=valid_fields)
+    query_filters = QueryFilters()
     if error_raised is not None:
         with pytest.raises(error_raised):
             query_filters.parse_and_validate(raw_query)

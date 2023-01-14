@@ -68,10 +68,11 @@ Limits to 100 results:
 
 ## TODO
 
-- API pagination offset
+- ~~API pagination offset~~ (done)
+- ~~Pyparsing query validation~~ (done)
 - check usage of [mongo engine ORM](http://mongoengine.org/) with timeseries collection
 - [kube-linter](https://docs.kubelinter.io/#/) [does not support kustomize](https://github.com/stackrox/kube-linter/issues/113), pre-render manifests before running linter
 - add UI tests (cypress)
-- increase test coverage
+- ~~increase test coverage~~ (done)
 - instrumentation, tracing, metrics and monitoring
 - terraform deployment

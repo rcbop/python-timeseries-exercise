@@ -4,7 +4,7 @@ from logging import Logger
 
 from api.filters import InvalidQueryError, QueryFilters
 from api.sensors.models import SensorData
-from api.sensors.service import ISensorService
+from api.sensors.service import ISensorService, NoResultsFound
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from kink import di
@@ -27,13 +27,16 @@ async def list_sensor_data(request: Request,
        list[SensorData]: The list of temperatures to be serialized and sent to the client.
     """
     parsed_filters = {}
-    if request.url.query:
-        query_filters = QueryFilters(
-            valid_fields=["timestamp", "metadata.area", "metadata.type", "metadata.uuid", "limit", "value"])
-        try:
-            parsed_filters = query_filters.parse_and_validate(
-                request.url.query)
-        except InvalidQueryError as e:
-            di[Logger].error(e)
-            return JSONResponse(content={"error": "Invalid query"}, status_code=400, headers={"Content-Type": "application/json"})
-    return service.get_sensor_data(parsed_filters)
+    if not request.url.query:
+        return service.get_sensor_data(parsed_filters)
+
+    query_filters = QueryFilters()
+    try:
+        parsed_filters = query_filters.parse_and_validate(
+            request.url.query)
+        return service.get_sensor_data(parsed_filters)
+    except InvalidQueryError as err:
+        di[Logger].error(err)
+        return JSONResponse(content={"error": "Invalid query"}, status_code=400, headers={"Content-Type": "application/json"})
+    except NoResultsFound as err:
+        return JSONResponse(content={"error": "No results found"}, status_code=404, headers={"Content-Type": "application/json"})
