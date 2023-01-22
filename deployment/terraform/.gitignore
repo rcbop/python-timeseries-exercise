@@ -1,0 +1,5 @@
+.terraform
+.terraform.tfstate.lock.info
+# move to s3 bucket later
+terraform.tfstate
+terraform.tfstate.backup

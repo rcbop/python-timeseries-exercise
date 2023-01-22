@@ -53,3 +53,59 @@ test:
 .PHONY: cloc
 cloc:
 	cloc --exclude-dir=$(tr '\n' ',' < .clocignore) .
+
+.PHONY: tf-docs
+tf-docs:
+	terraform-docs markdown table --output-file README.md --output-mode inject deployment/terraform
+
+.PHONY: tf-init
+tf-init:
+	terraform -chdir=deployment/terraform init
+
+.PHONY: tf-plan
+tf-plan:
+	terraform -chdir=deployment/terraform plan
+
+.PHONY: tf-apply
+tf-apply:
+	terraform -chdir=deployment/terraform apply
+
+.PHONY: tf-destroy
+tf-destroy:
+	terraform -chdir=deployment/terraform/ destroy
+
+.PHONY: tf-fmt
+tf-fmt:
+	terraform fmt -recursive deployment/terraform
+
+.PHONY: localstack-start
+localstack-start:
+	docker run -d --name=localstack -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack
+
+.PHONY: localstack-stop
+localstack-stop:
+	docker stop localstack
+
+.PHONY: localstack-destroy
+localstack-destroy:
+	docker rm localstack
+
+.PHONY: tflocal
+tflocal:
+	@which tflocal > /dev/null || (echo "tflocal not found, installing" && pip install tflocal)
+
+.PHONY: tflocal-init
+tflocal-init: tflocal
+	pushd deployment/terraform && tflocal init && popd
+
+.PHONY: tflocal-plan
+tflocal-plan: tflocal
+	pushd deployment/terraform && tflocal plan && popd
+
+.PHONY: tflocal-apply
+tflocal-apply: tflocal
+	pushd deployment/terraform && tflocal apply && popd
+
+.PHONY: tflocal-destroy
+tflocal-destroy: tflocal
+	pushd deployment/terraform && tflocal destroy && popd

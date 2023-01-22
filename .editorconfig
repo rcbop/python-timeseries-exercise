@@ -14,7 +14,7 @@ indent_size = 4
 indent_style = space
 indent_size = 2
 
-[*.{md,Rmd,rst}]
+[*.{md,Rmd,rst,tf,tfvars}]
 trim_trailing_whitespace = false
 indent_style = space
 indent_size = 2
