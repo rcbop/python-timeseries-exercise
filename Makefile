@@ -1,7 +1,7 @@
 # this makefile will install the required python packages for each component
 SHELL:=/usr/bin/zsh
-PYTHON_COMPONENTS=data-api data-generator plotly-dashboard
-NODE_PROJECT_DIR=angular-dashboard/dashboard
+PYTHON_COMPONENTS=data-api data-generator dashboard-plotly dashboard-nicegui
+NODE_PROJECT_DIR=dashboard-angular/dashboard
 VERSION=3.11.1
 PYTHON=${VENV_DIR}/bin/python
 

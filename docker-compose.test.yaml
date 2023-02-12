@@ -16,15 +16,15 @@ services:
     build:
       context: data-api
       target: test
-  angular-dashboard:
-    container_name: test-angular-dashboard
+  dashboard-angular:
+    container_name: test-dashboard-angular
     privileged: true
     build:
-      context: angular-dashboard
+      context: dashboard-angular
       target: test
     command: npm run ci
-  plotly-dashboard:
-    container_name: test-plotly-dashboard
+  dashboard-plotly:
+    container_name: test-dashboard-plotly
     build:
-      context: plotly-dashboard
+      context: dashboard-plotly
       target: test

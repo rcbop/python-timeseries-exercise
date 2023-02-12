@@ -53,19 +53,19 @@ services:
   ################################
   # visualization dashboards
   ################################
-  angular-dashboard:
-    container_name: angular-dashboard
+  dashboard-angular:
+    container_name: dashboard-angular
     build:
-      context: angular-dashboard
+      context: dashboard-angular
       target: prod
     ports:
       - 80:80
     depends_on:
       - api
-  plotly-dashboard:
-    container_name: plotly-dashboard
+  dashboard-plotly:
+    container_name: dashboard-plotly
     build:
-      context: plotly-dashboard
+      context: dashboard-plotly
       target: dash
     ports:
       - 8050:8050
@@ -74,12 +74,12 @@ services:
     depends_on:
       - data-consumer
     volumes:
-      - ./plotly-dashboard/dashboard:/app/dashboard
+      - ./dashboard-plotly/dashboard:/app/dashboard
     command: bash -c "python /app/dashboard/main.py"
-  nicegui-dashboard:
-    container_name: nicegui-dashboard
+  dashboard-nicegui:
+    container_name: dashboard-nicegui
     build:
-      context: nicegui-dashboard
+      context: dashboard-nicegui
     ports:
       - 8060:8060
     environment:
@@ -87,7 +87,7 @@ services:
     depends_on:
       - data-consumer
     volumes:
-      - ./nicegui-dashboard/dashboard:/app/dashboard
+      - ./dashboard-nicegui/dashboard:/app/dashboard
     command: bash -c "python /app/dashboard/main.py"
   ################################
   # sensors
