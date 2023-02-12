@@ -43,6 +43,12 @@ will become mongo query:
 }
 ```
 
+## CI
+
+Used github actions to define CI pipelines:
+
+![workflows](./docs/ci.png)
+
 ## Preview
 
 ### Default endpoint result:

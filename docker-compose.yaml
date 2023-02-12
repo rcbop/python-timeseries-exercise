@@ -43,7 +43,7 @@ services:
     container_name: ts-api
     build:
       context: data-api
-      target: base
+      target: api
     ports:
       - 8000:8000
     environment:
@@ -66,7 +66,7 @@ services:
     container_name: plotly-dashboard
     build:
       context: plotly-dashboard
-      target: base
+      target: dash
     ports:
       - 8050:8050
     environment:
@@ -76,6 +76,19 @@ services:
     volumes:
       - ./plotly-dashboard/dashboard:/app/dashboard
     command: bash -c "python /app/dashboard/main.py"
+  nicegui-dashboard:
+    container_name: nicegui-dashboard
+    build:
+      context: nicegui-dashboard
+    ports:
+      - 8060:8060
+    environment:
+      <<: *mongoenv
+    depends_on:
+      - data-consumer
+    volumes:
+      - ./nicegui-dashboard/dashboard:/app/dashboard
+    command: bash -c "python /app/dashboard/main.py"
   ################################
   # sensors
   ################################
@@ -83,7 +96,7 @@ services:
     container_name: ts-sensor-1
     build:
       context: data-sensor
-      target: base
+      target: sensor
     environment:
       <<: *mqttenv
       SENSOR_AREA: KITCHEN
@@ -94,7 +107,7 @@ services:
     container_name: ts-sensor-2
     build:
       context: data-sensor
-      target: base
+      target: sensor
     environment:
       <<: *mqttenv
       SENSOR_AREA: KITCHEN
@@ -105,7 +118,7 @@ services:
     container_name: ts-sensor-3
     build:
       context: data-sensor
-      target: base
+      target: sensor
     environment:
       <<: *mqttenv
       SENSOR_TYPE: HUMIDITY
@@ -116,7 +129,7 @@ services:
     container_name: ts-sensor-4
     build:
       context: data-sensor
-      target: base
+      target: sensor
     environment:
       <<: *mqttenv
       SENSOR_TYPE: TEMPERATURE
