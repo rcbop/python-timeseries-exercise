@@ -4,4 +4,4 @@ COPY requirements.txt .
 COPY pyproject.toml .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY dashboard/. /app/dashboard/
-ENTRYPOINT ["python", "/app/dashboard/main.py"]
+ENTRYPOINT ["python", "-m", "streamlit", "run", "/app/dashboard/main.py"]
