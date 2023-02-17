@@ -3,7 +3,7 @@
 This is an coding practice repository for a timeseries API using python, angular, mqtt and MongoDB.
 
 ![Tests](https://github.com/rcbop/python-timeseries/actions/workflows/ci.yaml/badge.svg)
-&nbsp;&nbsp;[![Lint K8s manifests](https://github.com/rcbop/python-timeseries/actions/workflows/lint-k8s-manifests.yaml/badge.svg)](https://github.com/rcbop/python-timeseries/actions/workflows/lint-k8s-manifests.yaml)&nbsp;&nbsp;[![codecov](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graph/badge.svg?token=ijcD6RzE8L)](https://codecov.io/gh/rcbop/timeseries-visualization)&nbsp;&nbsp;[![CodeQL](https://github.com/rcbop/python-timeseries/workflows/CodeQL/badge.svg)](https://github.com/rcbop/python-timeseries/actions/workflows/github-code-scanning/codeql)&nbsp;&nbsp;[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries?ref=badge_shield)
+&nbsp;&nbsp;[![codecov](https://codecov.io/gh/rcbop/timeseries-visualization/branch/main/graph/badge.svg?token=ijcD6RzE8L)](https://codecov.io/gh/rcbop/timeseries-visualization)&nbsp;&nbsp;[![CodeQL](https://github.com/rcbop/python-timeseries/workflows/CodeQL/badge.svg)](https://github.com/rcbop/python-timeseries/actions/workflows/github-code-scanning/codeql)&nbsp;&nbsp;[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frcbop%2Fpython-timeseries?ref=badge_shield)
 
 ## Requirements
 
