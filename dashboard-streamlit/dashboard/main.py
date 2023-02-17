@@ -58,4 +58,3 @@ for uuid, group in gk:
     print(group.head())
     st.subheader(f"Sensor {uuid}")
     st.line_chart(group, x="timestamp", y="value")
-
