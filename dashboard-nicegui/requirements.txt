@@ -1,2 +1,2 @@
-nicegui == 1.1.9
+nicegui == 1.1.10
 pymongo == 4.3.3
