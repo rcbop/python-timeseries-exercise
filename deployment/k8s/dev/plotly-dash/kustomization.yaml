@@ -1,3 +1,4 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -6,6 +7,6 @@ bases:
 
 namePrefix: dev-
 images:
-- name: <PLOTLY_DASH_IMAGE_NAME>
-  newName: my.image.registry/plotly-dash
-  newTag: dev
+  - name: <PLOTLY_DASH_IMAGE_NAME>
+    newName: docker.io/library/python-timeseries-exercise-dashboard-plotly
+    newTag: dev

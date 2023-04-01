@@ -1,3 +1,4 @@
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -5,3 +6,7 @@ bases:
   - ../../base/mongodb
 
 namePrefix: dev-
+images:
+  - name: <MONGODB_IMAGE_NAME>
+    newName: docker.io/library/mongo:latest
+    newTag: dev

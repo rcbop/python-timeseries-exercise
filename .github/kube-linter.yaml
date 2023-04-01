@@ -1,4 +1,5 @@
+---
 checks:
   doNotAutoAddDefaults: false
-  include: [ ]
-  exclude: [ ]
+  include: []
+  exclude: []

@@ -116,14 +116,14 @@ jobs:
     runs-on: ubuntu-latest
     needs: [node-tests, python-tests]
     steps:
-    - name: Download test results
-      uses: actions/download-artifact@v3
-    - name: List test results
-      run: |
-        find . -name "*.xml"
-    - name: Test Summary
-      uses: test-summary/action@v2
-      with:
-        paths: |
-          artifact/*-test-results.xml
-      if: always()
+      - name: Download test results
+        uses: actions/download-artifact@v3
+      - name: List test results
+        run: |
+          find . -name "*.xml"
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: |
+            artifact/*-test-results.xml
+        if: always()

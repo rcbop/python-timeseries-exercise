@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../../base/data-consumer/
+
+namePrefix: dev-
+images:
+  - name: <DATA_CONSUMER_IMAGE_NAME>
+    newName: docker.io/library/python-timeseries-exercise-data-consumer
+    newTag: dev

@@ -109,3 +109,21 @@ tflocal-apply: tflocal
 .PHONY: tflocal-destroy
 tflocal-destroy: tflocal
 	pushd deployment/terraform && tflocal destroy && popd
+
+.PHONY: setup-kind
+setup-kind:
+	@which kind > /dev/null || (echo "kind not found, installing" && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.18.0/kind-windows-amd64 && chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind)
+
+.PHONY: kind-create
+kind-create: setup-kind
+	kind create cluster --config deployment/kind/kind-config.yaml
+
+.PHONY: show-dkr-images
+show-dkr-images:
+	docker images | grep $(basename $(pwd))
+
+.PHONY: load-dkr-images
+load-dkr-images:
+	docker compose -f docker-compose.yaml build
+	docker images | grep $(basename $(pwd)) | awk '{ print $1":"$2 }' | xargs -I{} kind load docker-image {}
+	kind load docker-image --name timeseries-cluster mongo:latest
