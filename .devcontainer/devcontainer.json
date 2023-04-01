@@ -12,18 +12,18 @@
 		"vscode": {
 			"settings": {},
 			"extensions": [
-        "ms-python.python",
-        "ms-python.isort",
-        "ms-python.vscode-pylance",
-        "Angular.ng-template",
-        "EditorConfig.EditorConfig",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "donjayamanne.python-environment-manager",
-        "shardulm94.trailing-spaces",
-        "redhat.vscode-yaml"
+				"ms-python.python",
+				"ms-python.isort",
+				"ms-python.vscode-pylance",
+				"Angular.ng-template",
+				"EditorConfig.EditorConfig",
+				"ms-kubernetes-tools.vscode-kubernetes-tools",
+				"donjayamanne.python-environment-manager",
+				"shardulm94.trailing-spaces",
+				"redhat.vscode-yaml"
 			]
 		}
-	},
+	}
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [9000],
